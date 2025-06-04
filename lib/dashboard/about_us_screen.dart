@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        // Overall app background, consistent with a dark theme
+        scaffoldBackgroundColor: Colors.black,
       ),
       home: const AboutUsPage(),
     );
@@ -26,28 +28,28 @@ class AboutUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Explicitly set Scaffold background to white
       appBar: AppBar(
-        backgroundColor: Colors.white, // White background for app bar
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255), // White background for app bar
         elevation: 0, // No shadow
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.deepPurple, // Purple background for icon
+              color: Colors.blue[900], // Dark blue background for icon container
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () {
-                // Handle back button press
-              },
+            child: const Icon(
+              Icons.arrow_back_ios_new, // Back icon
+              color: Colors.white, // White icon
+              size: 20,
             ),
           ),
         ),
         title: const Text(
           'About Us',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.black, // Black title text
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -68,7 +70,7 @@ class AboutUsPage extends StatelessWidget {
                     'Smart home technology is a system that allows users to control home appliances, lighting, etc., allowing homeowners to remotely manage and monitor their systems, integrating with multiple devices for improved automation, enhancing convenience, security and energy savings.',
                     style: TextStyle(
                       fontSize: 14.0,
-                      color: Colors.black87,
+                      color: Colors.black, // Black text for description
                     ),
                   ),
                 ),
@@ -79,11 +81,10 @@ class AboutUsPage extends StatelessWidget {
                     // Placeholder for the smart home illustration
                     height: 120, // Adjust height as needed
                     decoration: BoxDecoration(
-                      color: Colors.grey[200], // Light grey placeholder
+                      color: Colors.blue[900], // Dark blue placeholder background
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: const Icon(Icons.house_siding_outlined,
-                        size: 60, color: Colors.grey),
+                    child: Image.asset("assets/images/pic.png")
                   ),
                 ),
               ],
@@ -96,7 +97,7 @@ class AboutUsPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.black, // Black text
               ),
             ),
             const SizedBox(height: 20.0),
@@ -109,7 +110,7 @@ class AboutUsPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.black, // Black text
               ),
             ),
             const SizedBox(height: 20.0),
@@ -144,14 +145,14 @@ class AboutUsPage extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.deepPurple, // Purple circle
+                      color: Colors.blue[900], // Dark blue circle
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '${index + 1}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.white, // White number inside dark blue circle
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
@@ -164,7 +165,7 @@ class AboutUsPage extends StatelessWidget {
                     child: Text(
                       processSteps[index],
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12.0),
+                      style: const TextStyle(fontSize: 12.0, color: Colors.black), // Black text
                     ),
                   ),
                 ],
@@ -173,7 +174,7 @@ class AboutUsPage extends StatelessWidget {
                 Container(
                   width: 50, // Length of the line
                   height: 2.0,
-                  color: Colors.deepPurple[100], // Light purple line
+                  color: Colors.blue[900], // Dark blue line
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 ),
             ],
@@ -206,7 +207,7 @@ class AboutUsPage extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Colors.deepPurple[50], // Light purple background
+            color: Colors.white, // White background for grid items
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Column(
@@ -215,16 +216,16 @@ class AboutUsPage extends StatelessWidget {
               Icon(
                 features[index]['icon'] as IconData,
                 size: 40,
-                color: Colors.deepPurple,
+                color: Colors.blue[900], // Dark blue icon
               ),
               const SizedBox(height: 10),
               Text(
                 features[index]['text'] as String,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Colors.black, // Black text
                 ),
               ),
             ],

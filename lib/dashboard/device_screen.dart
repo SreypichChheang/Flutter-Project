@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const Device());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Device extends StatelessWidget {
+  const Device({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Device Page',
       theme: ThemeData(
-        brightness: Brightness.light, // Overall light theme for the background
-        colorSchemeSeed: Colors.blue, // Just a seed, actual colors are defined below
+        brightness: Brightness.light,
+        colorSchemeSeed: Colors.blue,
       ),
       home: const DevicePage(),
     );
@@ -26,16 +26,11 @@ class DevicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // White background as in the image
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0, // No shadow for the app bar
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            // Handle back button press
-          },
-        ),
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           'Devices',
           style: TextStyle(
@@ -43,7 +38,6 @@ class DevicePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -54,7 +48,7 @@ class DevicePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.black, // Dark background for the card
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: Row(
@@ -81,7 +75,7 @@ class DevicePage extends StatelessWidget {
                             style: TextStyle(color: Colors.black),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white, // White button background
+                            backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -91,18 +85,13 @@ class DevicePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  // Placeholder for the illustration (replace with actual image asset if available)
-                  // For now, a simple container to represent the space
                   Container(
                     width: 150,
                     height: 150,
                     decoration: BoxDecoration(
-                     
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Image.asset("assets/images/boy.png"),
-                    
-
+                    child: Image.asset("assets/images/boy.png"), // Make sure this image exists
                   ),
                 ],
               ),
@@ -113,7 +102,7 @@ class DevicePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200], // Light grey background for search bar
+                color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: const TextField(
@@ -139,21 +128,17 @@ class DevicePage extends StatelessWidget {
             ),
             const SizedBox(height: 15.0),
             GridView.builder(
-              shrinkWrap: true, // Important for GridView inside SingleChildScrollView
-              physics: const NeverScrollableScrollPhysics(), // Disable GridView's own scrolling
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Two columns as in the image
+                crossAxisCount: 2,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
-                childAspectRatio: 0.9, // Adjust aspect ratio to fit the card content
+                childAspectRatio: 0.9,
               ),
-              itemCount: 3, // As per the image, there are 3 TV cards
+              itemCount: 3,
               itemBuilder: (context, index) {
-                return DeviceCard(
-                  deviceName: 'Tv',
-                  // You can add an actual image asset here if you have it
-                  // deviceImage: 'assets/tv_placeholder.png',
-                );
+                return const DeviceCard(deviceName: 'Tv');
               },
             ),
           ],
@@ -165,12 +150,10 @@ class DevicePage extends StatelessWidget {
 
 class DeviceCard extends StatelessWidget {
   final String deviceName;
-  // final String? deviceImage; // Uncomment if you want to use actual images
 
   const DeviceCard({
     super.key,
     required this.deviceName,
-    // this.deviceImage,
   });
 
   @override
@@ -178,7 +161,7 @@ class DeviceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.black, // Dark background for device cards
+        color: Colors.black,
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Column(
@@ -187,14 +170,13 @@ class DeviceCard extends StatelessWidget {
           Expanded(
             child: Center(
               child: Container(
-                // Placeholder for the TV image
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.grey[800], // Dark grey placeholder for TV screen
+                  color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: const Icon(Icons.tv, color: Colors.white70, size: 50), // Generic TV icon
+                child: const Icon(Icons.tv, color: Colors.white70, size: 50),
               ),
             ),
           ),
