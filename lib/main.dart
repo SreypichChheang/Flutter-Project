@@ -1,3 +1,5 @@
+import 'package:app/dashboard/home_page.dart';
+import 'package:app/device/add_device_screen.dart';
 import 'package:flutter/material.dart';
 import 'authentication/welcome_screen.dart';
 
