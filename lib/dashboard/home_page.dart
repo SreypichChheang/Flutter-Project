@@ -1,9 +1,11 @@
+import 'package:app/account/profile_screen.dart';
 import 'package:app/dashboard/about_us_screen.dart';
 import 'package:app/dashboard/dashboard_screen.dart';
 import 'package:app/dashboard/device_screen.dart';
 import 'package:app/dashboard/scan_device.dart';
 import 'package:app/dashboard/scedule_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:app/account/info_profile.dart'; // Make sure this import is at the top
 
 void main() => runApp(const Controller());
 
@@ -74,21 +76,33 @@ class _SmartHomeAppState extends State<SmartHomeApp> {
   }
 }
 
-PreferredSizeWidget _customAppBar({VoidCallback? onToggleTheme, bool isDarkMode = false}) {
+PreferredSizeWidget _customAppBar({
+  VoidCallback? onToggleTheme,
+  bool isDarkMode = false,
+  required BuildContext context, // Add context to be able to navigate
+}) {
   return AppBar(
     backgroundColor: Colors.white,
     elevation: 0,
     leading: Padding(
       padding: const EdgeInsets.only(left: 12),
-      child: CircleAvatar(
-        radius: 24,
-        backgroundColor: Colors.transparent,
-        child: ClipOval(
-          child: Image.asset(
-            'assets/images/profile.png',
-            width: 48,
-            height: 48,
-            fit: BoxFit.cover,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>  UserProfileScreen()),
+          );
+        },
+        child: CircleAvatar(
+          radius: 24,
+          backgroundColor: Colors.transparent,
+          child: ClipOval(
+            child: Image.asset(
+              'assets/images/profile.png',
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
@@ -124,6 +138,7 @@ class HomeScreen extends StatelessWidget {
       appBar: _customAppBar(
         onToggleTheme: parentState?._toggleTheme,
         isDarkMode: parentState?._isDarkMode ?? false,
+        context: context,
       ),
       body: LandingPage(),
     );
@@ -140,6 +155,7 @@ class DevicesScreen extends StatelessWidget {
       appBar: _customAppBar(
         onToggleTheme: parentState?._toggleTheme,
         isDarkMode: parentState?._isDarkMode ?? false,
+        context: context,
       ),
       body: const DevicePage(),
     );
@@ -156,6 +172,7 @@ class ScanScreen extends StatelessWidget {
       appBar: _customAppBar(
         onToggleTheme: parentState?._toggleTheme,
         isDarkMode: parentState?._isDarkMode ?? false,
+        context: context,
       ),
       body: const AddDevice(),
     );
@@ -172,6 +189,7 @@ class ScheduleScreen extends StatelessWidget {
       appBar: _customAppBar(
         onToggleTheme: parentState?._toggleTheme,
         isDarkMode: parentState?._isDarkMode ?? false,
+        context: context,
       ),
       body: const schedule(),
     );
@@ -188,6 +206,7 @@ class AboutUsScreen extends StatelessWidget {
       appBar: _customAppBar(
         onToggleTheme: parentState?._toggleTheme,
         isDarkMode: parentState?._isDarkMode ?? false,
+        context: context,
       ),
       body: const AboutUsPage(),
     );
