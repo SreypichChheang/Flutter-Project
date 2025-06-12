@@ -1,3 +1,4 @@
+import 'package:app/device/device_connection.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -68,6 +69,10 @@ class DevicePage extends StatelessWidget {
                         ElevatedButton.icon(
                           onPressed: () {
                             // Handle Add Device
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => DevicePairingScreen()),
+                            );
                           },
                           icon: const Icon(Icons.add, color: Colors.black),
                           label: const Text(
