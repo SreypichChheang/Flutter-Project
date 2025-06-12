@@ -39,6 +39,7 @@ We don’t share any personally identifying information publicly or with third-p
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
+              height: 50,
               child: FilledButton(
                 style: FilledButton.styleFrom(
                   backgroundColor: theme.brightness == Brightness.dark ? Colors.white : Colors.black,

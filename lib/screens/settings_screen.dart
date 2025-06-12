@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/section_tile.dart';
 import 'privacy_screen.dart';
+import 'about_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   final bool isDarkMode;
@@ -62,9 +63,24 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
             ),
-            SectionTile(icon: Icons.language, title: "Language"),
+            SectionTile(
+              icon: Icons.language, 
+              title: "Language",
+              onTap: (){
+                Navigator.pushNamed(context, '/language');
+              },
+            ),
             SectionTile(icon: Icons.bookmark, title: "Favorite"),
-            SectionTile(icon: Icons.info, title: "About"),
+            SectionTile(
+              icon: Icons.info, 
+              title: "About",
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AboutScreen()),
+                );
+              },
+            ),
             SectionTile(icon: Icons.logout, title: "Logout"),
           ],
         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/settings_screen.dart';
+import 'screens/language_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -27,11 +29,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData.light(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: SettingsScreen(
-        isDarkMode: isDarkMode,
-        onToggleDarkMode: toggleDarkMode,
-      ),
       debugShowCheckedModeBanner: false,
+      routes:{
+        '/': (context) => SettingsScreen(
+          isDarkMode: isDarkMode, 
+          onToggleDarkMode: toggleDarkMode,
+        ),
+        '/language': (context) => const LanguageScreen(),
+      },
+      initialRoute: '/',
     );
   }
 }
