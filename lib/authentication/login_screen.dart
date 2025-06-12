@@ -1,3 +1,5 @@
+
+import 'package:app/dashboard/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'forget_password.dart';
@@ -39,9 +41,10 @@ class _LoginPageState extends State<LoginPage>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
 
@@ -84,7 +87,10 @@ class _LoginPageState extends State<LoginPage>
                   Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -123,7 +129,11 @@ class _LoginPageState extends State<LoginPage>
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Login logic here
+                        // Navigate to DashboardScreen
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Controller()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
@@ -136,7 +146,6 @@ class _LoginPageState extends State<LoginPage>
                       child: const Text('LogIn'),
                     ),
                   ),
-
                   const SizedBox(height: 15),
 
                   // Forget Password
@@ -146,7 +155,9 @@ class _LoginPageState extends State<LoginPage>
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => ForgetPasswordPage()),
+                          MaterialPageRoute(
+                            builder: (_) => ForgetPasswordPage(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -182,15 +193,23 @@ class _LoginPageState extends State<LoginPage>
                     children: [
                       _SocialIconButton(
                         asset: 'assets/images/google.png',
-                        onTap: () => _launchUrlSafe('https://accounts.google.com/signin'),
+                        onTap:
+                            () => _launchUrlSafe(
+                              'https://accounts.google.com/signin',
+                            ),
                       ),
                       _SocialIconButton(
                         asset: 'assets/images/facebook.png',
-                        onTap: () => _launchUrlSafe('https://www.facebook.com/login.php'),
+                        onTap:
+                            () => _launchUrlSafe(
+                              'https://www.facebook.com/login.php',
+                            ),
                       ),
                       _SocialIconButton(
                         asset: 'assets/images/tiktok.png',
-                        onTap: () => _launchUrlSafe('https://www.tiktok.com/login'),
+                        onTap:
+                            () =>
+                                _launchUrlSafe('https://www.tiktok.com/login'),
                       ),
                     ],
                   ),
@@ -210,7 +229,10 @@ class _LoginPageState extends State<LoginPage>
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: focusNode.hasFocus ? Colors.black : Colors.grey, // always show outline
+          color:
+              focusNode.hasFocus
+                  ? Colors.black
+                  : Colors.grey, // always show outline
           width: 1.5,
         ),
         boxShadow: [
@@ -228,7 +250,10 @@ class _LoginPageState extends State<LoginPage>
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -260,7 +285,9 @@ class _SocialIconButtonState extends State<_SocialIconButton> {
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: _isHovered ? Colors.black : Colors.grey.shade400),
+            border: Border.all(
+              color: _isHovered ? Colors.black : Colors.grey.shade400,
+            ),
           ),
           child: Image.asset(widget.asset, width: 32, height: 32),
         ),
