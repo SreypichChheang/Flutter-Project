@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/device/device_detail.dart';
+import 'package:app/device/device_connection.dart';
 
-class DevicesScreen extends StatefulWidget {
-  const DevicesScreen({super.key});
+class DevicesHomeScreen extends StatefulWidget {
+  const DevicesHomeScreen({super.key});
 
   @override
-  State<DevicesScreen> createState() => _DevicesScreenState();
+  State<DevicesHomeScreen> createState() => _DevicesScreenState();
 }
 
-class _DevicesScreenState extends State<DevicesScreen> {
+class _DevicesScreenState extends State<DevicesHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> allDevices = ['TV', 'FRIDGE', 'FAN'];
   List<String> filteredDevices = [];

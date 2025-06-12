@@ -35,6 +35,7 @@ class AddDevicePage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
             // Handle back button press
+            
           },
         ),
         title: const Text(
