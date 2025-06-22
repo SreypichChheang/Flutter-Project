@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'device_detail.dart'; // Make sure this import matches your file structure
+import 'device_detail.dart';
 
 class AddDeviceScreen extends StatelessWidget {
   const AddDeviceScreen({super.key});
@@ -13,21 +13,39 @@ class AddDeviceScreen extends StatelessWidget {
       {"name": "Fan", "icon": Icons.toys},
     ];
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
-        title: Text(
-          'Add Device',
-          style: GoogleFonts.roboto(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: isDark ? Colors.white : Colors.black,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: isDark ? Colors.black : Colors.white,
+                size: 20,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
           ),
         ),
-        centerTitle: true,
+        title: Text(
+          'Devices',
+          style: GoogleFonts.roboto(
+            color: theme.textTheme.bodyLarge?.color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -38,7 +56,7 @@ class AddDeviceScreen extends StatelessWidget {
               'Please choose your device in your smart home',
               style: GoogleFonts.roboto(
                 fontSize: 14,
-                color: Colors.grey[700],
+                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
               ),
             ),
             const SizedBox(height: 20),
@@ -53,7 +71,7 @@ class AddDeviceScreen extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   final device = devices[index];
-                  return _buildDeviceCard(context, device);
+                  return _buildDeviceCard(context, device, isDark);
                 },
               ),
             ),
@@ -63,7 +81,7 @@ class AddDeviceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDeviceCard(BuildContext context, Map<String, dynamic> device) {
+  Widget _buildDeviceCard(BuildContext context, Map<String, dynamic> device, bool isDark) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -78,7 +96,7 @@ class AddDeviceScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: isDark ? Colors.grey[900] : Colors.black,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Stack(

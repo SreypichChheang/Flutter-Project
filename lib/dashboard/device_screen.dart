@@ -1,42 +1,34 @@
-import 'package:app/device/device_connection.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const Device());
-}
-
-class Device extends StatelessWidget {
-  const Device({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Device Page',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        colorSchemeSeed: Colors.blue,
-      ),
-      home: const DevicePage(),
-    );
-  }
-}
+import 'package:app/dashboard/home_page.dart';
+import 'package:app/device/device_connection.dart';
 
 class DevicePage extends StatelessWidget {
   const DevicePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final cardColor = isDarkMode ? Colors.grey[900] : Colors.black;
+    final textColor = isDarkMode ? Colors.white : Colors.white;
+    final buttonColor = isDarkMode ? Colors.white : Colors.white;
+    final buttonTextColor = isDarkMode ? Colors.black : Colors.black;
+    final searchBgColor = isDarkMode ? Colors.grey[800] : Colors.grey[200];
+    final searchTextColor = isDarkMode ? Colors.white : Colors.black54;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        leading: Padding(padding: const EdgeInsets.all(8.0)),
+        title: Text(
           'Devices',
           style: TextStyle(
-            color: Colors.black,
+            color: isDarkMode ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
+            fontSize: 20.0,
           ),
         ),
       ),
@@ -49,7 +41,7 @@ class DevicePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: cardColor,
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: Row(
@@ -58,29 +50,27 @@ class DevicePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Click here to add some more devices in your smart home',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.0,
-                          ),
+                          style: TextStyle(color: textColor, fontSize: 14.0),
                         ),
                         const SizedBox(height: 10.0),
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Handle Add Device
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => DevicePairingScreen()),
+                              MaterialPageRoute(
+                                builder: (context) => DevicePairingScreen(),
+                              ),
                             );
                           },
-                          icon: const Icon(Icons.add, color: Colors.black),
-                          label: const Text(
+                          icon: Icon(Icons.add, color: buttonTextColor),
+                          label: Text(
                             'Add Device',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: buttonTextColor),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: buttonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -96,7 +86,7 @@ class DevicePage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Image.asset("assets/images/boy.png"), // Make sure this image exists
+                    child: Image.asset("assets/images/boy.png"),
                   ),
                 ],
               ),
@@ -107,26 +97,26 @@ class DevicePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: searchBgColor,
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: const TextField(
+              child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search Devices',
                   border: InputBorder.none,
-                  icon: Icon(Icons.search, color: Colors.black54),
-                  hintStyle: TextStyle(color: Colors.black54),
+                  icon: Icon(Icons.search, color: searchTextColor),
+                  hintStyle: TextStyle(color: searchTextColor),
                 ),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: searchTextColor),
               ),
             ),
             const SizedBox(height: 20.0),
 
             // Browse here section
-            const Text(
+            Text(
               'Browse here',
               style: TextStyle(
-                color: Colors.black,
+                color: isDarkMode ? Colors.white : Colors.black,
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -143,7 +133,7 @@ class DevicePage extends StatelessWidget {
               ),
               itemCount: 3,
               itemBuilder: (context, index) {
-                return const DeviceCard(deviceName: 'Tv');
+                return DeviceCard(deviceName: 'Tv', isDarkMode: isDarkMode);
               },
             ),
           ],
@@ -155,10 +145,12 @@ class DevicePage extends StatelessWidget {
 
 class DeviceCard extends StatelessWidget {
   final String deviceName;
+  final bool isDarkMode;
 
   const DeviceCard({
     super.key,
     required this.deviceName,
+    required this.isDarkMode,
   });
 
   @override
@@ -166,7 +158,7 @@ class DeviceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: isDarkMode ? Colors.grey[900] : Colors.black,
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Column(
@@ -178,10 +170,14 @@ class DeviceCard extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.grey[800],
+                  color: isDarkMode ? Colors.grey[800] : Colors.grey[800],
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: const Icon(Icons.tv, color: Colors.white70, size: 50),
+                child: Icon(
+                  Icons.tv,
+                  color: isDarkMode ? Colors.white70 : Colors.white70,
+                  size: 50,
+                ),
               ),
             ),
           ),
@@ -198,15 +194,17 @@ class DeviceCard extends StatelessWidget {
                 ),
               ),
               Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Colors.white : Colors.white,
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.add, color: Colors.black, size: 20),
-                  onPressed: () {
-                    // Handle adding this specific device
-                  },
+                  icon: Icon(
+                    Icons.add,
+                    color: isDarkMode ? Colors.black : Colors.black,
+                    size: 20,
+                  ),
+                  onPressed: () {},
                 ),
               ),
             ],

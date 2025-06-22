@@ -48,15 +48,23 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
         InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () => Navigator.pop(context),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Icon(Icons.arrow_back_ios_rounded, size: 25, color: Colors.black87),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Icon(
+              Icons.arrow_back_ios_rounded, 
+              size: 25, 
+              color: Colors.white,
+            ),
           ),
         ),
         const SizedBox(width: 12),
-        const Text(
+        Text(
           'Devices',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 22, 
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ],
     );
@@ -69,17 +77,24 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 160, 166, 169),
+          color: Colors.grey[800],
           borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'Click here to add some more\ndevices in your smart home',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black87,
+              style: const TextStyle(
+                color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
@@ -87,16 +102,24 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => _goToAddDeviceScreen(context),
-              icon: const Icon(Icons.add, color: Colors.white, size: 24),
+              icon: const Icon(
+                Icons.add, 
+                color: Colors.white, 
+                size: 24
+              ),
               label: const Text(
                 'Add Device',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(
+                  color: Colors.white, 
+                  fontSize: 16
+                ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 81, 84, 90),
+                backgroundColor: Colors.blue[600],
                 elevation: 2,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ],
@@ -108,17 +131,23 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
   Widget _buildSearchBar() {
     return TextField(
       controller: _searchController,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: 'Search Devices',
-        prefixIcon: const Icon(Icons.search),
+        prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Colors.grey[800],
         hintStyle: const TextStyle(color: Colors.grey),
-        prefixIconColor: Colors.grey,
         contentPadding: const EdgeInsets.symmetric(vertical: 10),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(
+            color: Colors.grey[700]!,
+          ),
         ),
       ),
     );
@@ -139,13 +168,13 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
           return Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.grey[800],
               borderRadius: BorderRadius.circular(20),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: Colors.black.withOpacity(0.3),
                   blurRadius: 6,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
@@ -155,17 +184,25 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
                 Text(
                   device,
                   style: const TextStyle(
-                    color: Colors.black87,
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Icon(Icons.devices_other, color: Colors.blueAccent, size: 40),
+                Icon(
+                  Icons.devices_other, 
+                  color: Colors.blue[400], 
+                  size: 40
+                ),
                 const SizedBox(height: 10),
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 14,
-                  backgroundColor: Colors.blueAccent,
-                  child: Icon(Icons.add, size: 16, color: Colors.white),
+                  backgroundColor: Colors.blue[400],
+                  child: const Icon(
+                    Icons.add, 
+                    size: 16, 
+                    color: Colors.white
+                  ),
                 ),
               ],
             ),
@@ -178,7 +215,7 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.grey[900],
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -193,7 +230,11 @@ class _DevicesScreenState extends State<DevicesHomeScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Browse here',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18, 
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 12),
               _buildDeviceGrid(),

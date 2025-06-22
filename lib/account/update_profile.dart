@@ -42,14 +42,14 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[900],
         elevation: 0,
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Colors.blue[600],
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -60,7 +60,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
         title: Text(
           'Update',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -89,7 +89,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               left: 20,
                               top: 40,
                               child: _buildGeometricShape(
-                                color: Color(0xFF3F51B5).withOpacity(0.8),
+                                color: Colors.blue[400]!.withOpacity(0.8),
                                 size: 30,
                               ),
                             ),
@@ -97,7 +97,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               left: 40,
                               top: 80,
                               child: _buildGeometricShape(
-                                color: Color(0xFF5C6BC0).withOpacity(0.6),
+                                color: Colors.blue[300]!.withOpacity(0.6),
                                 size: 20,
                               ),
                             ),
@@ -105,7 +105,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               left: 60,
                               top: 50,
                               child: _buildGeometricShape(
-                                color: Color(0xFF7986CB).withOpacity(0.7),
+                                color: Colors.blue[200]!.withOpacity(0.7),
                                 size: 25,
                               ),
                             ),
@@ -125,15 +125,15 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                         width: 100,
                                         height: 140,
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: Colors.grey[800],
                                           borderRadius: BorderRadius.circular(12),
                                           border: Border.all(
-                                            color: Color(0xFF3F51B5),
+                                            color: Colors.blue[400]!,
                                             width: 3,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Color(0xFF3F51B5).withOpacity(0.2),
+                                              color: Colors.blue[400]!.withOpacity(0.2),
                                               blurRadius: 10,
                                               offset: Offset(0, 5),
                                             ),
@@ -147,7 +147,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 60,
                                               height: 8,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFF3F51B5),
+                                                color: Colors.blue[400],
                                                 borderRadius: BorderRadius.circular(4),
                                               ),
                                             ),
@@ -156,7 +156,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 40,
                                               height: 6,
                                               decoration: BoxDecoration(
-                                                color: Colors.grey[300],
+                                                color: Colors.grey[600],
                                                 borderRadius: BorderRadius.circular(3),
                                               ),
                                             ),
@@ -165,7 +165,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 50,
                                               height: 6,
                                               decoration: BoxDecoration(
-                                                color: Colors.grey[300],
+                                                color: Colors.grey[600],
                                                 borderRadius: BorderRadius.circular(3),
                                               ),
                                             ),
@@ -175,7 +175,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 35,
                                               height: 15,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFF4CAF50),
+                                                color: Colors.green[600],
                                                 borderRadius: BorderRadius.circular(8),
                                               ),
                                               child: Icon(
@@ -211,7 +211,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 35,
                                               height: 50,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFF3F51B5),
+                                                color: Colors.blue[400],
                                                 borderRadius: BorderRadius.circular(8),
                                               ),
                                             ),
@@ -220,7 +220,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 30,
                                               height: 25,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFF2C387E),
+                                                color: Colors.blue[600],
                                                 borderRadius: BorderRadius.circular(6),
                                               ),
                                             ),
@@ -251,7 +251,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 30,
                                               height: 45,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFF3F51B5),
+                                                color: Colors.blue[400],
                                                 borderRadius: BorderRadius.circular(6),
                                               ),
                                             ),
@@ -260,7 +260,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               width: 35,
                                               height: 20,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFF2C387E),
+                                                color: Colors.blue[600],
                                                 borderRadius: BorderRadius.circular(6),
                                               ),
                                             ),
@@ -278,7 +278,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               right: 30,
                               bottom: 80,
                               child: _buildGeometricShape(
-                                color: Color(0xFF9C27B0).withOpacity(0.6),
+                                color: Colors.purple[300]!.withOpacity(0.6),
                                 size: 15,
                               ),
                             ),
@@ -286,7 +286,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               right: 10,
                               bottom: 100,
                               child: _buildGeometricShape(
-                                color: Color(0xFFE91E63).withOpacity(0.5),
+                                color: Colors.pink[300]!.withOpacity(0.5),
                                 size: 12,
                               ),
                             ),
@@ -326,7 +326,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                       
@@ -339,7 +339,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                           'We added lot of new features and fix some bug to make your experience as smooth as possible',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[600],
+                            color: Colors.grey[400],
                             height: 1.5,
                           ),
                           textAlign: TextAlign.center,
@@ -359,7 +359,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                       child: ElevatedButton(
                         onPressed: _isUpdating ? null : _handleUpdate,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          backgroundColor: Colors.blue[600],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -409,7 +409,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                       child: Text(
                         'Not Now',
                         style: TextStyle(
-                          color: Colors.grey[500],
+                          color: Colors.grey[400],
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -458,6 +458,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.grey[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -465,11 +466,12 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
             children: [
               Icon(Icons.check_circle, color: Colors.green, size: 28),
               SizedBox(width: 8),
-              Text('Update Complete!'),
+              Text('Update Complete!', style: TextStyle(color: Colors.white)),
             ],
           ),
           content: Text(
             'Your app has been successfully updated with the latest features and improvements.',
+            style: TextStyle(color: Colors.white),
           ),
           actions: [
             ElevatedButton(
@@ -478,7 +480,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                 Navigator.of(context).pop(); // Go back to profile
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.blue[600],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -503,7 +505,7 @@ class PlantPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(0xFF4CAF50)
+      ..color = Colors.green[600]!
       ..style = PaintingStyle.fill;
     
     // Draw simple plant stems

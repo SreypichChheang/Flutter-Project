@@ -1,5 +1,4 @@
 import 'package:app/device/add_device.dart';
-import 'package:app/device/device_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,21 +16,36 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[900],
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
-        title: Text(
-          'Add Device',
-          style: GoogleFonts.roboto(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue[600],
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
           ),
         ),
-        centerTitle: true,
+        title: Text(
+          'Devices',
+          style: GoogleFonts.roboto(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -43,7 +57,7 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
                 style: GoogleFonts.roboto(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 10),
@@ -51,7 +65,7 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
                 'Choose a 2.4GHz Wi-Fi for device pairing and enter the right password',
                 style: GoogleFonts.roboto(
                   fontSize: 14,
-                  color: Colors.grey[700],
+                  color: Colors.grey[400],
                 ),
               ),
               const SizedBox(height: 6),
@@ -59,20 +73,20 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
                 "If your 2.4GHz Wi-Fi and 5Ghz Wi-Fi share the same WiFi SSID, you're recommended to change your router settings or try compatible pairing mode.",
                 style: GoogleFonts.roboto(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: Colors.grey[500],
                 ),
               ),
               const SizedBox(height: 30),
               Center(
                 child: Column(
                   children: [
-                    const Icon(Icons.wifi, size: 150, color: Colors.grey),
+                    Icon(Icons.wifi, size: 150, color: Colors.grey[600]),
                     const SizedBox(height: 10),
                     Text(
                       'Support adding WiFi and Bluetooth devices',
                       style: GoogleFonts.roboto(
                         fontSize: 14,
-                        color: Colors.grey[400],
+                        color: Colors.grey[500],
                       ),
                     ),
                   ],
@@ -81,16 +95,19 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
               const SizedBox(height: 30),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey)),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey[700]!)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.wifi, size: 20),
+                    Icon(Icons.wifi, size: 20, color: Colors.white),
                     const SizedBox(width: 10),
                     Text(
                       'GIC-Student',
-                      style: GoogleFonts.roboto(fontSize: 16),
+                      style: GoogleFonts.roboto(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
@@ -98,18 +115,20 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey)),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey[700]!)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lock_outline, size: 20),
+                    Icon(Icons.lock_outline, size: 20, color: Colors.white),
                     const SizedBox(width: 10),
                     Expanded(
                       child: TextField(
                         obscureText: _obscureText,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: '********',
+                          hintStyle: TextStyle(color: Colors.grey[500]),
                           border: InputBorder.none,
                         ),
                       ),
@@ -118,6 +137,7 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
                       icon: Icon(
                         _obscureText ? Icons.visibility_off : Icons.visibility,
                         size: 20,
+                        color: Colors.white,
                       ),
                       onPressed: () {
                         setState(() {
@@ -134,23 +154,24 @@ class _BluetoothPairingScreenState extends State<BluetoothPairingScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
+                      backgroundColor: Colors.blue[600],
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     onPressed: () {
-                      // Handle next
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: (context) => const AddDeviceScreen()));
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => const AddDeviceScreen())
+                      );
                     },
                     child: Text(
                       'Next',
                       style: GoogleFonts.roboto(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white
+                        color: Colors.white,
                       ),
                     ),
                   ),

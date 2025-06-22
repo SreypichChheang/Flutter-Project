@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:app/account/profile_screen.dart';
-import 'package:app/dashboard/about_us_screen.dart';
 import 'package:app/dashboard/dashboard_screen.dart';
 import 'package:app/dashboard/device_screen.dart';
 import 'package:app/dashboard/scan_device.dart';
 import 'package:app/dashboard/scedule_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:app/account/info_profile.dart'; // Make sure this import is at the top
+import 'package:app/setting/notification.dart';
+import 'package:app/account/info_profile.dart';
 
 void main() => runApp(const Controller());
 
@@ -45,29 +45,76 @@ class _SmartHomeAppState extends State<SmartHomeApp> {
   }
 
   void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
+    setState(() => _isDarkMode = !_isDarkMode);
+  }
+
+  ThemeData _buildLightTheme() {
+    return ThemeData(
+      brightness: Brightness.light,
+      primarySwatch: Colors.blue,
+      scaffoldBackgroundColor: Colors.white,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+      ),
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    return ThemeData(
+      brightness: Brightness.dark,
+      primarySwatch: Colors.blueGrey,
+      scaffoldBackgroundColor: Colors.grey[900],
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey[900],
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Colors.grey[900],
+        selectedItemColor: Colors.blue[200],
+        unselectedItemColor: Colors.grey,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: _isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      theme: _buildLightTheme(),
+      darkTheme: _buildDarkTheme(),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: _pages[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: _onTabTapped,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+          unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+          backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
           type: BottomNavigationBarType.fixed,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.devices_other), label: 'Devices'),
-            BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
-            BottomNavigationBarItem(icon: Icon(Icons.settings_remote), label: 'Automation'),
+            BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Scan'),
+            BottomNavigationBarItem(icon: Icon(Icons.settings_remote), label: 'Schedule'),
             BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
           ],
         ),
@@ -77,12 +124,14 @@ class _SmartHomeAppState extends State<SmartHomeApp> {
 }
 
 PreferredSizeWidget _customAppBar({
-  VoidCallback? onToggleTheme,
-  bool isDarkMode = false,
-  required BuildContext context, // Add context to be able to navigate
+  required VoidCallback onToggleTheme,
+  required bool isDarkMode,
+  required BuildContext context,
 }) {
+  final theme = Theme.of(context);
+  
   return AppBar(
-    backgroundColor: Colors.white,
+    backgroundColor: theme.appBarTheme.backgroundColor,
     elevation: 0,
     leading: Padding(
       padding: const EdgeInsets.only(left: 12),
@@ -90,7 +139,7 @@ PreferredSizeWidget _customAppBar({
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>  UserProfileScreen()),
+            MaterialPageRoute(builder: (context) => UserProfileScreen()),
           );
         },
         child: CircleAvatar(
@@ -107,21 +156,30 @@ PreferredSizeWidget _customAppBar({
         ),
       ),
     ),
-    title: const Text(
+    title: Text(
       'Ronny Jin',
-      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      style: theme.appBarTheme.titleTextStyle?.copyWith(
+        fontWeight: FontWeight.bold,
+      ),
     ),
     actions: [
       IconButton(
-        icon: const Icon(Icons.notifications_none, color: Colors.black),
-        onPressed: () {},
+        icon: Icon(
+          Icons.notifications_none,
+          color: theme.iconTheme.color,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NotificationScreen()),
+          );
+        },
       ),
       IconButton(
-        icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode, color: Colors.black),
-        onPressed: onToggleTheme,
-      ),
-      IconButton(
-        icon: Icon(isDarkMode ? Icons.dark_mode : Icons.settings, color: Colors.black),
+        icon: Icon(
+          isDarkMode ? Icons.light_mode : Icons.dark_mode,
+          color: theme.iconTheme.color,
+        ),
         onPressed: onToggleTheme,
       ),
     ],
@@ -133,14 +191,24 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parentState = context.findAncestorStateOfType<_SmartHomeAppState>();
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Scaffold(
       appBar: _customAppBar(
-        onToggleTheme: parentState?._toggleTheme,
-        isDarkMode: parentState?._isDarkMode ?? false,
+        onToggleTheme: () {
+          final state = context.findAncestorStateOfType<_SmartHomeAppState>();
+          state?._toggleTheme();
+        },
+        isDarkMode: isDarkMode,
         context: context,
       ),
-      body: LandingPage(),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: Builder(
+        builder: (context) {
+          return LandingPage(); // Make sure LandingPage uses theme colors
+        },
+      ),
     );
   }
 }
@@ -150,14 +218,12 @@ class DevicesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parentState = context.findAncestorStateOfType<_SmartHomeAppState>();
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Scaffold(
-      appBar: _customAppBar(
-        onToggleTheme: parentState?._toggleTheme,
-        isDarkMode: parentState?._isDarkMode ?? false,
-        context: context,
-      ),
-      body: const DevicePage(),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: const DevicePage(), // Make sure DevicePage uses theme colors
     );
   }
 }
@@ -167,14 +233,12 @@ class ScanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parentState = context.findAncestorStateOfType<_SmartHomeAppState>();
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Scaffold(
-      appBar: _customAppBar(
-        onToggleTheme: parentState?._toggleTheme,
-        isDarkMode: parentState?._isDarkMode ?? false,
-        context: context,
-      ),
-      body: const AddDevice(),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: const AddDevice(), // Make sure AddDevice uses theme colors
     );
   }
 }
@@ -184,14 +248,12 @@ class ScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parentState = context.findAncestorStateOfType<_SmartHomeAppState>();
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Scaffold(
-      appBar: _customAppBar(
-        onToggleTheme: parentState?._toggleTheme,
-        isDarkMode: parentState?._isDarkMode ?? false,
-        context: context,
-      ),
-      body: const schedule(),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: const Schedule(), // Make sure Schedule uses theme colors
     );
   }
 }
@@ -201,14 +263,12 @@ class AboutUsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parentState = context.findAncestorStateOfType<_SmartHomeAppState>();
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Scaffold(
-      appBar: _customAppBar(
-        onToggleTheme: parentState?._toggleTheme,
-        isDarkMode: parentState?._isDarkMode ?? false,
-        context: context,
-      ),
-      body: const AboutUsPage(),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: const UserProfileScreen(), // Make sure UserProfileScreen uses theme colors
     );
   }
 }

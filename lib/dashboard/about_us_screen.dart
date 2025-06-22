@@ -11,11 +11,34 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'About Us Page',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        // Overall app background, consistent with a dark theme
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Colors.blue[800],
+        colorScheme: ColorScheme.dark(
+          primary: Colors.blue[300]!,
+          secondary: Colors.blue[200]!,
+          surface: Colors.grey[900]!,
+          background: Colors.black,
+        ),
         scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey[900],
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.white),
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        cardTheme: CardTheme(
+          color: Colors.grey[850],
+          elevation: 2,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
       ),
       home: const AboutUsPage(),
     );
@@ -27,33 +50,16 @@ class AboutUsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Explicitly set Scaffold background to white
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255), // White background for app bar
-        elevation: 0, // No shadow
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.blue[900], // Dark blue background for icon container
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: const Icon(
-              Icons.arrow_back_ios_new, // Back icon
-              color: Colors.white, // White icon
-              size: 20,
-            ),
-          ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'About Us',
-          style: TextStyle(
-            color: Colors.black, // Black title text
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+        title: const Text('About Us'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -64,13 +70,13 @@ class AboutUsPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 2,
                   child: Text(
                     'Smart home technology is a system that allows users to control home appliances, lighting, etc., allowing homeowners to remotely manage and monitor their systems, integrating with multiple devices for improved automation, enhancing convenience, security and energy savings.',
                     style: TextStyle(
                       fontSize: 14.0,
-                      color: Colors.black, // Black text for description
+                      color: colors.onSurface.withOpacity(0.9),
                     ),
                   ),
                 ),
@@ -78,13 +84,16 @@ class AboutUsPage extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    // Placeholder for the smart home illustration
-                    height: 120, // Adjust height as needed
+                    height: 120,
                     decoration: BoxDecoration(
-                      color: Colors.blue[900], // Dark blue placeholder background
+                      color: colors.primary.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Image.asset("assets/images/pic.png")
+                    child: Image.asset(
+                      "assets/images/pic.png",
+                      color: Colors.white.withOpacity(0.8),
+                      colorBlendMode: BlendMode.modulate,
+                    ),
                   ),
                 ),
               ],
@@ -92,36 +101,37 @@ class AboutUsPage extends StatelessWidget {
             const SizedBox(height: 30.0),
 
             // "Process to do it" Section
-            const Text(
+            Text(
               'Process to do it',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Black text
+                color: colors.onSurface,
               ),
             ),
             const SizedBox(height: 20.0),
-            _buildProcessTimeline(),
+            _buildProcessTimeline(theme),
             const SizedBox(height: 30.0),
 
             // "Why should we use this application?" Section
-            const Text(
+            Text(
               'Why should we use this application?',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Black text
+                color: colors.onSurface,
               ),
             ),
             const SizedBox(height: 20.0),
-            _buildWhyUseAppGrid(),
+            _buildWhyUseAppGrid(theme),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProcessTimeline() {
+  Widget _buildProcessTimeline(ThemeData theme) {
+    final colors = theme.colorScheme;
     final List<String> processSteps = [
       'Sign Up & Login',
       'Connect Your Smart Devices',
@@ -131,7 +141,7 @@ class AboutUsPage extends StatelessWidget {
     ];
 
     return SizedBox(
-      height: 100, // Adjust height to accommodate circles and text
+      height: 100,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: processSteps.length,
@@ -145,14 +155,14 @@ class AboutUsPage extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.blue[900], // Dark blue circle
+                      color: colors.primary,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '${index + 1}',
-                        style: const TextStyle(
-                          color: Colors.white, // White number inside dark blue circle
+                        style: TextStyle(
+                          color: colors.onPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
@@ -161,20 +171,23 @@ class AboutUsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   SizedBox(
-                    width: 80, // Fixed width for text to prevent overflow
+                    width: 80,
                     child: Text(
                       processSteps[index],
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12.0, color: Colors.black), // Black text
+                      style: TextStyle(
+                        fontSize: 12.0, 
+                        color: colors.onSurface,
+                      ),
                     ),
                   ),
                 ],
               ),
               if (index < processSteps.length - 1)
                 Container(
-                  width: 50, // Length of the line
+                  width: 50,
                   height: 2.0,
-                  color: Colors.blue[900], // Dark blue line
+                  color: colors.primary,
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 ),
             ],
@@ -184,7 +197,8 @@ class AboutUsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildWhyUseAppGrid() {
+  Widget _buildWhyUseAppGrid(ThemeData theme) {
+    final colors = theme.colorScheme;
     final List<Map<String, dynamic>> features = [
       {'icon': Icons.lightbulb_outline, 'text': 'Energy Saving'},
       {'icon': Icons.devices_other, 'text': 'Smart Control'},
@@ -194,41 +208,38 @@ class AboutUsPage extends StatelessWidget {
 
     return GridView.builder(
       shrinkWrap: true,
-      physics:
-          const NeverScrollableScrollPhysics(), // Disable GridView's own scrolling
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Two items per row
+        crossAxisCount: 2,
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
-        childAspectRatio: 1.2, // Adjust as needed for better spacing
+        childAspectRatio: 1.2,
       ),
       itemCount: features.length,
       itemBuilder: (context, index) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.white, // White background for grid items
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                features[index]['icon'] as IconData,
-                size: 40,
-                color: Colors.blue[900], // Dark blue icon
-              ),
-              const SizedBox(height: 10),
-              Text(
-                features[index]['text'] as String,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, // Black text
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  features[index]['icon'] as IconData,
+                  size: 40,
+                  color: colors.primary,
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                Text(
+                  features[index]['text'] as String,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                    color: colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
