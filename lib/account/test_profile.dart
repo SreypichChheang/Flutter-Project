@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'profile_screen.dart';
+import 'profile_screen.dart'; // already uses Firebase
 
 void main() {
   runApp(MyApp());
@@ -10,12 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Profile Test',
-      home: UserProfileScreen(
-        userName: "Anna Jennifer",
-        userEmail: "annajennifer@gmail.com",
-        userImage: "https://picsum.photos/200/200?random=1",
-        followerCount: 1000,
-      ),
+      home: UserProfileScreen(), // no parameters
       debugShowCheckedModeBanner: false,
     );
   }

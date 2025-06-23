@@ -1,6 +1,6 @@
 import 'package:app/dashboard/about_us_screen.dart';
 import 'package:app/setting/notification.dart';
-import 'package:app/widget/profile_card.dart';
+import 'package:app/widget/profile_widget.dart';
 import 'package:app/widget/section_tile.dart';
 import 'package:app/setting/privacy_screen.dart';
 import 'package:app/setting/favorite.dart';
@@ -94,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            const ProfileCard(),
+            const UserProfileWidget(),
             _buildSectionTile(
               context,
               icon: Icons.dark_mode,
