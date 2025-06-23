@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'authentication/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // no package: prefix needed
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // 👈 uses your firebase_options.dart
+  );
   runApp(const SmartHomeApp());
 }
 

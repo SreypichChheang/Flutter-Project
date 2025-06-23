@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
@@ -35,7 +37,8 @@ class _RegisterScreenState extends State<RegisterScreen>
       begin: const Offset(0, 0.1),
       end: Offset.zero,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
 
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
@@ -55,12 +58,48 @@ class _RegisterScreenState extends State<RegisterScreen>
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      try {
+        final credential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(credential.user!.uid)
+            .set({
+          'first_name': _firstNameController.text.trim(),
+          'last_name': _lastNameController.text.trim(),
+          'email': _emailController.text.trim(),
+          'created_at': Timestamp.now(),
+          'role': 'user',
+          'status': 'active',
+        });
+
+        // Check if the widget is still mounted before navigating
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        // Check if the widget is still mounted before showing SnackBar
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Registration failed')),
+        );
+      } catch (e) {
+        // Catch any other unexpected errors
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An unexpected error occurred: ${e.toString()}'),
+          ),
+        );
+      }
     }
   }
 
@@ -86,7 +125,9 @@ class _RegisterScreenState extends State<RegisterScreen>
             builder: (context, constraints) {
               return SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 15, vertical: 20),
+                  horizontal: 15,
+                  vertical: 20,
+                ),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
@@ -98,7 +139,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                           alignment: Alignment.topLeft,
                           child: IconButton(
                             icon: const Icon(
-                                Icons.arrow_back_ios, color: Colors.black),
+                              Icons.arrow_back_ios,
+                              color: Colors.black,
+                            ),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ),
@@ -128,7 +171,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 child: const Text(
                                   'Create your own account to explore our features',
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.black54),
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -162,12 +207,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     children: [
                                       Expanded(
                                         child: _buildField(
-                                            'First Name', _firstNameController),
+                                          'First Name',
+                                          _firstNameController,
+                                        ),
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
                                         child: _buildField(
-                                            'Last Name', _lastNameController),
+                                          'Last Name',
+                                          _lastNameController,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -177,14 +226,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     _emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     validator: (value) {
-                                      if (value == null || value
-                                          .trim()
-                                          .isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Email is required';
                                       }
                                       if (!RegExp(
-                                          r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$')
-                                          .hasMatch(value)) {
+                                        r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$',
+                                      ).hasMatch(value)) {
                                         return 'Enter a valid email';
                                       }
                                       return null;
@@ -224,13 +272,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         backgroundColor: Colors.black,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
-                                              12),
+                                            12,
+                                          ),
                                         ),
                                       ),
                                       child: const Text(
                                         'Sign Up',
                                         style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -246,19 +297,24 @@ class _RegisterScreenState extends State<RegisterScreen>
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                top: 10, bottom: 200),
+                              top: 10,
+                              bottom: 200,
+                            ),
                             child: GestureDetector(
-                              onTap: () =>
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const LoginPage()),
-                                  ),
+                              onTap:
+                                  () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LoginPage(),
+                                ),
+                              ),
                               child: const Text.rich(
                                 TextSpan(
                                   text: 'Already have an account? ',
                                   style: TextStyle(
-                                      color: Colors.white70, fontSize: 14),
+                                    color: Colors.white70,
+                                    fontSize: 14,
+                                  ),
                                   children: [
                                     TextSpan(
                                       text: 'Log In',
@@ -286,7 +342,8 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
   }
 
-  Widget _buildField(String hintText,
+  Widget _buildField(
+      String hintText,
       TextEditingController controller, {
         bool obscureText = false,
         TextInputType keyboardType = TextInputType.text,
@@ -296,17 +353,18 @@ class _RegisterScreenState extends State<RegisterScreen>
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      validator: validator ??
+      validator:
+      validator ??
               (value) =>
-          value == null || value
-              .trim()
-              .isEmpty ? 'Required field' : null,
+          value == null || value.trim().isEmpty ? 'Required field' : null,
       decoration: InputDecoration(
         hintText: hintText,
         filled: true,
         fillColor: Colors.grey.shade200,
         contentPadding: const EdgeInsets.symmetric(
-            vertical: 14, horizontal: 16),
+          vertical: 14,
+          horizontal: 16,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
