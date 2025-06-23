@@ -32,7 +32,7 @@ class AddDevice extends StatelessWidget {
           ),
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
           backgroundColor: Colors.grey.shade800,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -52,7 +52,7 @@ class AddDevice extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: Colors.grey.shade800,
           elevation: 0,
           margin: EdgeInsets.zero,

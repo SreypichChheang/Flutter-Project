@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: Colors.grey[850],
           elevation: 2,
           margin: EdgeInsets.zero,
@@ -52,12 +52,19 @@ class AboutUsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              // Optionally handle case when cannot pop
+            }
+          },
         ),
         title: const Text('About Us'),
       ),
@@ -66,38 +73,68 @@ class AboutUsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Introduction/Description Section
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Smart home technology is a system that allows users to control home appliances, lighting, etc., allowing homeowners to remotely manage and monitor their systems, integrating with multiple devices for improved automation, enhancing convenience, security and energy savings.',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: colors.onSurface.withOpacity(0.9),
-                    ),
+            // Responsive Introduction Section
+            size.width > 600
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Smart home technology is a system that allows users to control home appliances, lighting, etc., allowing homeowners to remotely manage and monitor their systems, integrating with multiple devices for improved automation, enhancing convenience, security and energy savings.',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: colors.onSurface.withOpacity(0.9),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: colors.primary.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Image.asset(
+                            "assets/images/pic.png",
+                            color: Colors.white.withOpacity(0.8),
+                            colorBlendMode: BlendMode.modulate,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Smart home technology is a system that allows users to control home appliances, lighting, etc., allowing homeowners to remotely manage and monitor their systems, integrating with multiple devices for improved automation, enhancing convenience, security and energy savings.',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: colors.onSurface.withOpacity(0.9),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        height: 120,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: colors.primary.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Image.asset(
+                          "assets/images/pic.png",
+                          color: Colors.white.withOpacity(0.8),
+                          colorBlendMode: BlendMode.modulate,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 16.0),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: colors.primary.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Image.asset(
-                      "assets/images/pic.png",
-                      color: Colors.white.withOpacity(0.8),
-                      colorBlendMode: BlendMode.modulate,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+
             const SizedBox(height: 30.0),
 
             // "Process to do it" Section
@@ -176,7 +213,7 @@ class AboutUsPage extends StatelessWidget {
                       processSteps[index],
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 12.0, 
+                        fontSize: 12.0,
                         color: colors.onSurface,
                       ),
                     ),
