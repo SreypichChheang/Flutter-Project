@@ -404,7 +404,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       builder: (BuildContext context) {
         return Theme(
           data: theme.copyWith(
-            dialogTheme: DialogTheme(
+            dialogTheme: DialogThemeData(
               backgroundColor: theme.cardColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
