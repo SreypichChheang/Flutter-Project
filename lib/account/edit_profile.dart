@@ -88,11 +88,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: colorScheme.primary,
+            color: Colors.black,
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
+            icon: Icon(Icons.arrow_back, color:Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -182,7 +182,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
+                  backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -191,7 +191,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Text(
                   'Save',
                   style: TextStyle(
-                    color: colorScheme.onPrimary,
+                    color: const Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

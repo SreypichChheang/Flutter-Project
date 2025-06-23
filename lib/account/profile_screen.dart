@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:app/setting/settings_screen.dart';
-import 'edit_profile.dart';
+import 'edit_profile.dart' hide ChangePasswordScreen;
 import 'changePsw_profile.dart';
 import 'info_profile.dart';
 import 'update_profile.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 
 class UserProfileScreen extends StatefulWidget {
   final String? userName;
@@ -62,18 +63,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    final textColor = theme.colorScheme.onSurface;
-    final cardColor = theme.cardColor;
-    final primaryColor = theme.colorScheme.primary;
-    final scaffoldBackground = theme.scaffoldBackgroundColor;
-    bool isProfileSelected = true;
+
+    // COLORS: Black & White theme adapted for light/dark mode
+    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color cardColor = isDarkMode ? Colors.grey[900]! : Colors.grey[200]!;
+    final Color primaryColor = isDarkMode ? Colors.white : Colors.black;
+    final Color scaffoldBackground = isDarkMode ? Colors.black : Colors.white;
+    final Color onPrimaryColor = isDarkMode ? Colors.black : Colors.white;
 
     return Scaffold(
       backgroundColor: scaffoldBackground,
       body: SafeArea(
         child: Column(
           children: [
-            // Top Navigation
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -94,7 +96,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           child: Text(
                             'User Profile',
                             style: TextStyle(
-                              color: theme.colorScheme.onPrimary,
+                              color: onPrimaryColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -108,9 +110,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               MaterialPageRoute(
                                 builder: (context) => SettingsScreen(
                                   isDarkMode: isDarkMode,
-                                  onToggleDarkMode: (bool value) {
-                                    // Implement theme change logic
-                                  },
+                                  onToggleDarkMode: (bool value) {},
                                 ),
                               ),
                             );
@@ -121,9 +121,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: isDarkMode 
-                                  ? Colors.grey[800] 
-                                  : Colors.grey[100],
+                              color: cardColor,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -175,9 +173,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      Icons.edit, 
-                      color: theme.colorScheme.onPrimary, 
-                      size: 16
+                      Icons.edit,
+                      color: onPrimaryColor,
+                      size: 16,
                     ),
                   ),
                 ),
@@ -186,7 +184,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // User Name
             Text(
               displayName,
               style: TextStyle(
@@ -198,7 +195,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             const SizedBox(height: 12),
 
-            // Followers Count
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
@@ -208,7 +204,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Text(
                 '$displayFollowers Followers',
                 style: TextStyle(
-                  color: theme.colorScheme.onPrimary,
+                  color: onPrimaryColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -217,7 +213,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             const SizedBox(height: 40),
 
-            // Menu Items
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -294,7 +289,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                     const Spacer(),
 
-                    // Log out button
+                    // Logout Button
                     Container(
                       width: double.infinity,
                       height: 56,
@@ -313,12 +308,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.logout, color: theme.colorScheme.onPrimary),
+                            Icon(Icons.logout, color: onPrimaryColor),
                             const SizedBox(width: 8),
                             Text(
                               'Log out',
                               style: TextStyle(
-                                color: theme.colorScheme.onPrimary,
+                                color: onPrimaryColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -344,13 +339,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required VoidCallback onTap,
   }) {
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
+    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color cardColor = isDarkMode ? Colors.grey[900]! : Colors.grey[200]!;
+    final Color iconBgColor = isDarkMode ? Colors.white : Colors.black;
+    final Color iconColor = isDarkMode ? Colors.black : Colors.white;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: isDarkMode ? Colors.grey[800] : Colors.grey[50],
+          color: cardColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             if (!isDarkMode)
@@ -367,14 +367,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
+                color: iconBgColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon, 
-                color: theme.colorScheme.onPrimary, 
-                size: 20
-              ),
+              child: Icon(icon, color: iconColor, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -383,14 +379,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onSurface,
+                  color: textColor,
                 ),
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios, 
-              color: theme.colorScheme.onSurface.withOpacity(0.6), 
-              size: 16
+              Icons.arrow_forward_ios,
+              color: textColor.withOpacity(0.6),
+              size: 16,
             ),
           ],
         ),
@@ -399,13 +395,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   void _showLogoutDialog(BuildContext context, ThemeData theme) {
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color cardColor = isDarkMode ? Colors.grey[900]! : Colors.grey[200]!;
+    final Color primaryColor = isDarkMode ? Colors.white : Colors.black;
+    final Color onPrimaryColor = isDarkMode ? Colors.black : Colors.white;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Theme(
           data: theme.copyWith(
             dialogTheme: DialogThemeData(
-              backgroundColor: theme.cardColor,
+              backgroundColor: cardColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -414,34 +417,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           child: AlertDialog(
             title: Text(
               'Log Out',
-              style: TextStyle(color: theme.colorScheme.onSurface),
+              style: TextStyle(color: textColor),
             ),
             content: Text(
               'Are you sure you want to log out?',
-              style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+              style: TextStyle(color: textColor.withOpacity(0.7)),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   'Cancel',
-                  style: TextStyle(color: theme.colorScheme.primary),
+                  style: TextStyle(color: primaryColor),
                 ),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // Handle logout logic
+                  // Handle logout logic here
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
+                  backgroundColor: primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
-                  'Log Out', 
-                  style: TextStyle(color: theme.colorScheme.onPrimary),
+                  'Log Out',
+                  style: TextStyle(color: onPrimaryColor),
                 ),
               ),
             ],

@@ -12,7 +12,7 @@ class RoutineAddButton extends StatelessWidget {
       icon: const Icon(Icons.add),
       label: const Text('Add Routine'),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.black,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -338,13 +338,7 @@ class _ScheduleState extends State<Schedule> {
         ),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () => _showAddRoutineModal(context),
-            ),
-          ),
+          
         ],
       ),
       body: Padding(
@@ -367,7 +361,7 @@ class _ScheduleState extends State<Schedule> {
                           Text(
                             'Automate your home',
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: Colors.blue,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),

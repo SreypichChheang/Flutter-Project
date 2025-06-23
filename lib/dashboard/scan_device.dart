@@ -2,82 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 void main() {
-  runApp(const AddDevice());
+  runApp(const MyApp());
 }
 
-class AddDevice extends StatelessWidget {
-  const AddDevice({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Add Device Page',
-      theme: ThemeData.dark().copyWith(
-        // Dark theme configuration only
-        scaffoldBackgroundColor: Colors.grey.shade900,
-        colorScheme: ColorScheme.dark(
-          primary: Colors.blue.shade300,
-          secondary: Colors.blue.shade200,
-          surface: Colors.grey.shade800,
-          onSurface: Colors.white,
-          error: Colors.red.shade400,
-        ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey.shade900,
-          elevation: 1,
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
-        dialogTheme: DialogThemeData(
-          backgroundColor: Colors.grey.shade800,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          contentTextStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-        ),
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: Colors.green.shade800,
-          contentTextStyle: const TextStyle(color: Colors.white),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        cardTheme: CardThemeData(
-          color: Colors.grey.shade800,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
+      debugShowCheckedModeBanner: false,
+      title: 'Dark Mode QR Scanner',
+      themeMode: ThemeMode.system,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.blue),
       ),
-      home: const AddDevicePage(),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.grey),
+      ),
+      home: const AddDevice(),
     );
   }
 }
 
-class AddDevicePage extends StatefulWidget {
-  const AddDevicePage({super.key});
+class AddDevice extends StatefulWidget {
+  const AddDevice({super.key});
 
   @override
-  State<AddDevicePage> createState() => _AddDevicePageState();
+  State<AddDevice> createState() => _AddDeviceState();
 }
 
-class _AddDevicePageState extends State<AddDevicePage> {
+class _AddDeviceState extends State<AddDevice> {
   final MobileScannerController cameraController = MobileScannerController();
   bool isScanning = false;
-  String? scannedResult;
   bool isTorchOn = false;
+  String? scannedCode;
 
   @override
   void dispose() {
@@ -87,9 +50,13 @@ class _AddDevicePageState extends State<AddDevicePage> {
 
   void _toggleScanning() {
     setState(() {
-      isScanning = !isScanning;
-      if (!isScanning) {
-        scannedResult = null;
+      if (isScanning) {
+        // Stop scanning
+        isScanning = false;
+      } else {
+        // Start scanning
+        scannedCode = null;
+        isScanning = true;
       }
     });
   }
@@ -101,215 +68,145 @@ class _AddDevicePageState extends State<AddDevicePage> {
     });
   }
 
-  void _showScanResult(String code) {
+  void _onDetect(BarcodeCapture capture) {
+    if (!isScanning) return; // ignore if not scanning
+
+    final barcodes = capture.barcodes;
+    if (barcodes.isNotEmpty) {
+      final code = barcodes.first.rawValue;
+      if (code != null && scannedCode == null) {
+        setState(() {
+          scannedCode = code;
+          isScanning = false;
+        });
+        _showResultDialog(code);
+      }
+    }
+  }
+
+  void _showResultDialog(String code) {
+    final colors = Theme.of(context).colorScheme;
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Device Found'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('The following device was detected:'),
-                const SizedBox(height: 10),
-                Text(
-                  code,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text('Would you like to add this device?'),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    scannedResult = null;
-                  });
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Device added successfully')),
-                  );
-                },
-                child: const Text('Add Device'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        backgroundColor: colors.surface,
+        title: Text('QR Code Detected', style: TextStyle(color: colors.onSurface)),
+        content: Text(code, style: TextStyle(color: colors.onSurface)),
+        actions: [
+          TextButton(
+            child: Text('Close', style: TextStyle(color: colors.primary)),
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {
+                scannedCode = null;
+              });
+            },
           ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Scan Devices', style: TextStyle(fontSize: 18)),
+      backgroundColor: scaffoldBg,
+    appBar: AppBar(
+  centerTitle: true,
+  backgroundColor: const Color.fromARGB(255, 255, 255, 255), // black background
+  title: Center(
+    child: Text(
+      'QR Code Scanner',
+      style: TextStyle(
+        color: const Color.fromARGB(255, 0, 0, 0),  // white text for contrast
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
       ),
+    ),
+  ),
+),
+
 
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (isScanning)
-                    SizedBox(
-                      width: 250,
-                      height: 250,
-                      child: MobileScanner(
-                        controller: cameraController,
-                        onDetect: (capture) {
-                          final List<Barcode> barcodes = capture.barcodes;
-                          if (barcodes.isNotEmpty) {
-                            final String? code = barcodes.first.rawValue;
-                            if (code != null && scannedResult == null) {
-                              setState(() {
-                                scannedResult = code;
-                                isScanning = false;
-                              });
-                              _showScanResult(code);
-                            }
-                          }
-                        },
-                      ),
-                    )
-                  else
-                    Container(
-                      width: 250,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: colors.outline.withOpacity(0.5),
-                          width: 2,
-                        ),
-                        color:
-                            scannedResult != null
-                                ? Colors.green.shade800
-                                : colors.surface.withOpacity(0.8),
+              // Scanner preview or placeholder box
+              Container(
+                width: 300,
+                height: 300,
+                decoration: BoxDecoration(
+                  color: colors.surface.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.black, width: 2),
+                ),
+                child: isScanning
+                    ? ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child:
-                            scannedResult != null
-                                ? Icon(
-                                  Icons.check,
-                                  color: colors.onPrimary,
-                                  size: 80,
-                                )
-                                : Icon(
-                                  Icons.qr_code,
-                                  color: colors.onSurface,
-                                  size: 80,
-                                ),
-                      ),
-                    ),
-
-                  if (isScanning)
-                    IgnorePointer(
-                      child: Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: colors.primary, width: 4),
-                          borderRadius: BorderRadius.circular(16),
+                        child: MobileScanner(
+                          controller: cameraController,
+                          onDetect: _onDetect,
                         ),
+                      )
+                    : Center(
+                        child: scannedCode != null
+                            ? Icon(Icons.check_circle, color: Colors.green, size: 80)
+                            : Icon(Icons.qr_code_scanner, color: colors.onSurface, size: 80),
                       ),
-                    ),
-                ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 24),
+
+              // Display scanned code text or instruction
               Text(
-                scannedResult != null
-                    ? "Device scanned successfully!"
-                    : isScanning
-                    ? "Align QR code within the frame"
-                    : "Scan your smart device QR code",
+                scannedCode ??
+                    (isScanning
+                        ? 'Align QR code within the frame'
+                        : 'Tap "Start Scanning" to scan a QR code'),
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color:
-                      scannedResult != null
-                          ? Colors.green.shade300
-                          : colors.onSurface.withOpacity(0.8),
+                  color: scannedCode != null
+                      ? Colors.green.shade300
+                      : colors.onSurface.withOpacity(0.8),
                   fontWeight: FontWeight.w500,
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 24),
+
+              // Torch toggle button shown only when scanning
               if (isScanning)
                 IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: colors.surface,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      isTorchOn ? Icons.flash_off : Icons.flash_on,
-                      color: colors.primary,
-                      size: 30,
-                    ),
+                  icon: Icon(
+                    isTorchOn ? Icons.flash_off : Icons.flash_on,
+                    color: colors.primary,
+                    size: 32,
                   ),
                   onPressed: _toggleTorch,
                 ),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 24),
+
+              // Start / Stop scanning button
               SizedBox(
                 width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: _toggleScanning,
+                height: 50,
+                child: ElevatedButton.icon(
+                  icon: Icon(isScanning ? Icons.stop : Icons.qr_code_scanner),
+                  label: Text(isScanning ? 'Stop Scanning' : 'Start Scanning'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isScanning ? colors.error : colors.primary,
+                    backgroundColor: isScanning ? colors.error : Colors.black,
                     foregroundColor: colors.onPrimary,
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    elevation: 2,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        isScanning ? 'Stop Scanning' : 'Start Scanning',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Icon(isScanning ? Icons.stop : Icons.qr_code_scanner),
-                    ],
-                  ),
+                  onPressed: _toggleScanning,
                 ),
               ),
             ],

@@ -9,7 +9,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   bool _isUpdating = false;
 
   @override
@@ -19,7 +19,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
       duration: Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -27,7 +27,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _slideAnimation = Tween<Offset>(
       begin: Offset(0, 0.3),
       end: Offset.zero,
@@ -35,21 +35,24 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
       parent: _animationController,
       curve: Curves.easeOutBack,
     ));
-    
+
     _animationController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: colorScheme.background,
         elevation: 0,
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue[600],
+            color: Colors.black,
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -60,7 +63,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
         title: Text(
           'Update',
           style: TextStyle(
-            color: Colors.white,
+            color: colorScheme.onBackground,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -79,12 +82,10 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Custom Illustration
                       Container(
                         height: 300,
                         child: Stack(
                           children: [
-                            // Background geometric shapes
                             Positioned(
                               left: 20,
                               top: 40,
@@ -109,15 +110,12 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                 size: 25,
                               ),
                             ),
-                            
-                            // Main illustration - People and screen
                             Center(
                               child: Container(
                                 width: 250,
                                 height: 200,
                                 child: Stack(
                                   children: [
-                                    // Mobile screen/tablet in center
                                     Positioned(
                                       right: 60,
                                       top: 20,
@@ -125,7 +123,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                         width: 100,
                                         height: 140,
                                         decoration: BoxDecoration(
-                                          color: Colors.grey[800],
+                                          color: colorScheme.surface,
                                           borderRadius: BorderRadius.circular(12),
                                           border: Border.all(
                                             color: Colors.blue[400]!,
@@ -142,7 +140,6 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            // Screen content
                                             Container(
                                               width: 60,
                                               height: 8,
@@ -170,7 +167,6 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                               ),
                                             ),
                                             SizedBox(height: 12),
-                                            // Update button on screen
                                             Container(
                                               width: 35,
                                               height: 15,
@@ -188,92 +184,20 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                         ),
                                       ),
                                     ),
-                                    
-                                    // Left person (male with briefcase)
                                     Positioned(
                                       left: 0,
                                       bottom: 0,
-                                      child: Container(
-                                        width: 60,
-                                        child: Column(
-                                          children: [
-                                            // Head
-                                            Container(
-                                              width: 25,
-                                              height: 25,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFFFFDBB5),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            // Body
-                                            Container(
-                                              width: 35,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue[400],
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                            ),
-                                            // Legs
-                                            Container(
-                                              width: 30,
-                                              height: 25,
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue[600],
-                                                borderRadius: BorderRadius.circular(6),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      child: _buildPersonShape(isFemale: false),
                                     ),
-                                    
-                                    // Right person (female)
                                     Positioned(
                                       right: 0,
                                       bottom: 0,
-                                      child: Container(
-                                        width: 50,
-                                        child: Column(
-                                          children: [
-                                            // Head
-                                            Container(
-                                              width: 22,
-                                              height: 22,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFFFFDBB5),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            // Body
-                                            Container(
-                                              width: 30,
-                                              height: 45,
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue[400],
-                                                borderRadius: BorderRadius.circular(6),
-                                              ),
-                                            ),
-                                            // Skirt/legs
-                                            Container(
-                                              width: 35,
-                                              height: 20,
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue[600],
-                                                borderRadius: BorderRadius.circular(6),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      child: _buildPersonShape(isFemale: true),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            
-                            // Decorative elements
                             Positioned(
                               right: 30,
                               bottom: 80,
@@ -290,17 +214,13 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                 size: 12,
                               ),
                             ),
-                            
-                            // Plants/decorative elements
                             Positioned(
                               left: 10,
                               bottom: 20,
                               child: Container(
                                 width: 40,
                                 height: 30,
-                                child: CustomPaint(
-                                  painter: PlantPainter(),
-                                ),
+                                child: CustomPaint(painter: PlantPainter()),
                               ),
                             ),
                             Positioned(
@@ -309,37 +229,29 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               child: Container(
                                 width: 35,
                                 height: 25,
-                                child: CustomPaint(
-                                  painter: PlantPainter(),
-                                ),
+                                child: CustomPaint(painter: PlantPainter()),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      
                       SizedBox(height: 40),
-                      
-                      // Title
                       Text(
                         'Time to Update',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: colorScheme.onBackground,
                         ),
                       ),
-                      
                       SizedBox(height: 20),
-                      
-                      // Description
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
                           'We added lot of new features and fix some bug to make your experience as smooth as possible',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[400],
+                            color: colorScheme.onBackground.withOpacity(0.7),
                             height: 1.5,
                           ),
                           textAlign: TextAlign.center,
@@ -348,18 +260,15 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                     ],
                   ),
                 ),
-                
-                // Buttons
                 Column(
                   children: [
-                    // Update App Button
                     Container(
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
                         onPressed: _isUpdating ? null : _handleUpdate,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[600],
+                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -373,7 +282,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                     width: 20,
                                     height: 20,
                                     child: CircularProgressIndicator(
-                                      color: Colors.white,
+                                      color: colorScheme.onPrimary,
                                       strokeWidth: 2,
                                     ),
                                   ),
@@ -381,7 +290,7 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                                   Text(
                                     'Updating...',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: colorScheme.onPrimary,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -398,18 +307,13 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
                               ),
                       ),
                     ),
-                    
                     SizedBox(height: 16),
-                    
-                    // Not Now Button
                     TextButton(
-                      onPressed: _isUpdating ? null : () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: _isUpdating ? null : () => Navigator.pop(context),
                       child: Text(
                         'Not Now',
                         style: TextStyle(
-                          color: Colors.grey[400],
+                          color: colorScheme.onBackground.withOpacity(0.6),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -421,6 +325,40 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPersonShape({required bool isFemale}) {
+    return Container(
+      width: isFemale ? 50 : 60,
+      child: Column(
+        children: [
+          Container(
+            width: isFemale ? 22 : 25,
+            height: isFemale ? 22 : 25,
+            decoration: BoxDecoration(
+              color: Color(0xFFFFDBB5),
+              shape: BoxShape.circle,
+            ),
+          ),
+          Container(
+            width: isFemale ? 30 : 35,
+            height: isFemale ? 45 : 50,
+            decoration: BoxDecoration(
+              color: Colors.blue[400],
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          Container(
+            width: isFemale ? 35 : 30,
+            height: isFemale ? 20 : 25,
+            decoration: BoxDecoration(
+              color: Colors.blue[600],
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -440,25 +378,25 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
     setState(() {
       _isUpdating = true;
     });
-    
-    // Simulate update process
+
     await Future.delayed(Duration(seconds: 3));
-    
+
     setState(() {
       _isUpdating = false;
     });
-    
-    // Show success dialog
+
     _showUpdateSuccessDialog();
   }
 
   void _showUpdateSuccessDialog() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.grey[800],
+          backgroundColor: colorScheme.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -466,26 +404,26 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
             children: [
               Icon(Icons.check_circle, color: Colors.green, size: 28),
               SizedBox(width: 8),
-              Text('Update Complete!', style: TextStyle(color: Colors.white)),
+              Text('Update Complete!', style: TextStyle(color: colorScheme.onSurface)),
             ],
           ),
           content: Text(
             'Your app has been successfully updated with the latest features and improvements.',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: colorScheme.onSurface.withOpacity(0.9)),
           ),
           actions: [
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Go back to profile
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[600],
+                backgroundColor: colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('Great!', style: TextStyle(color: Colors.white)),
+              child: Text('Great!', style: TextStyle(color: colorScheme.onPrimary)),
             ),
           ],
         );
@@ -500,29 +438,26 @@ class _UpdateScreenState extends State<UpdateScreen> with TickerProviderStateMix
   }
 }
 
-// Custom painter for plant decorations
 class PlantPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.green[600]!
       ..style = PaintingStyle.fill;
-    
-    // Draw simple plant stems
+
     final path = Path();
     path.moveTo(size.width * 0.5, size.height);
     path.lineTo(size.width * 0.3, size.height * 0.7);
     path.lineTo(size.width * 0.1, size.height * 0.5);
-    
+
     path.moveTo(size.width * 0.5, size.height);
     path.lineTo(size.width * 0.7, size.height * 0.6);
     path.lineTo(size.width * 0.9, size.height * 0.4);
-    
+
     paint.strokeWidth = 3;
     paint.style = PaintingStyle.stroke;
     canvas.drawPath(path, paint);
-    
-    // Draw leaves
+
     paint.style = PaintingStyle.fill;
     canvas.drawCircle(Offset(size.width * 0.1, size.height * 0.5), 6, paint);
     canvas.drawCircle(Offset(size.width * 0.9, size.height * 0.4), 5, paint);

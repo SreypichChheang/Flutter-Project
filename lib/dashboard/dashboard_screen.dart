@@ -80,7 +80,7 @@ class _LandingPageState extends State<LandingPage> {
       body: SmartHomeScreen(key: _smartHomeKey),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDeviceDialog,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.black,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -355,7 +355,7 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(device.icon, color: theme.colorScheme.primary, size: 34),
+              child: Icon(device.icon, color: Colors.black, size: 34),
             ),
             const Spacer(),
             Text(
