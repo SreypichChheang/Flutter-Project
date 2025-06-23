@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:html' as html; // For web file picker
-import 'dart:convert'; // For base64 decoding
-import 'dart:typed_data'; // For Uint8List
+import 'dart:html' as html;
+import 'dart:convert';
+import 'dart:typed_data';
 
 class EditProfileScreen extends StatefulWidget {
   final String? initialName;
@@ -25,46 +25,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _genderController = TextEditingController(text: "Female");
   final TextEditingController _nationalityController = TextEditingController(text: "USA");
   final TextEditingController _phoneController = TextEditingController(text: "+44 1653 3343556");
-  
-  String? _selectedImageUrl; // To store the new selected image
+
+  String? _selectedImageUrl;
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with passed data or defaults
-    _usernameController = TextEditingController(
-      text: widget.initialName ?? "Anna Jennifer"
-    );
-    _emailController = TextEditingController(
-      text: widget.initialEmail ?? "annajennifer@gmail.com"
-    );
-    _selectedImageUrl = widget.initialImage; // Initialize with current image
+    _usernameController = TextEditingController(text: widget.initialName ?? "Anna Jennifer");
+    _emailController = TextEditingController(text: widget.initialEmail ?? "annajennifer@gmail.com");
+    _selectedImageUrl = widget.initialImage;
   }
 
-  // Helper method to get ImageProvider safely
   ImageProvider _getImageProvider() {
     if (_selectedImageUrl != null && _selectedImageUrl!.isNotEmpty) {
       if (_selectedImageUrl!.startsWith('data:')) {
         try {
-          // Extract base64 data from data URL
           final base64Data = _selectedImageUrl!.split(',')[1];
           final bytes = base64Decode(base64Data);
           return MemoryImage(bytes);
         } catch (e) {
           print('Error loading base64 image: $e');
-          return NetworkImage('https://picsum.photos/200/200?random=1');
         }
       } else {
         return NetworkImage(_selectedImageUrl!);
       }
     }
-    return NetworkImage('https://picsum.photos/200/200?random=1');
+    return const NetworkImage('https://picsum.photos/200/200?random=1');
   }
 
   void _pickImage() async {
-    // Create file input element
     final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.accept = 'image/*'; // Only accept image files
+    uploadInput.accept = 'image/*';
     uploadInput.click();
 
     uploadInput.onChange.listen((event) {
@@ -72,13 +63,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (files!.isNotEmpty) {
         final file = files[0];
         final reader = html.FileReader();
-        
+
         reader.onLoadEnd.listen((event) {
           setState(() {
-            _selectedImageUrl = reader.result as String; // Base64 data URL
+            _selectedImageUrl = reader.result as String;
           });
         });
-        
+
         reader.readAsDataUrl(file);
       }
     });
@@ -86,26 +77,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.background,
         elevation: 0,
         leading: Container(
-          margin: EdgeInsets.all(8),
+          margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: colorScheme.primary,
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         title: Text(
           'Edit Profile',
           style: TextStyle(
-            color: Colors.black,
+            color: colorScheme.onBackground,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -113,11 +107,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile Image Section
+            // Profile Image
             Center(
               child: Stack(
                 children: [
@@ -136,24 +130,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     bottom: 0,
                     right: 0,
                     child: GestureDetector(
-                      onTap: _pickImage, // Add tap functionality
+                      onTap: _pickImage,
                       child: Container(
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: colorScheme.surface,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 8,
-                              offset: Offset(0, 2),
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
                         child: Icon(
                           Icons.add,
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                           size: 20,
                         ),
                       ),
@@ -162,43 +156,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
             ),
-            
-            SizedBox(height: 40),
-            
-            // Form Fields
-            _buildTextField("Username", _usernameController),
-            SizedBox(height: 24),
-            
-            _buildTextField("Email", _emailController),
-            SizedBox(height: 24),
-            
-            _buildTextField("Gender", _genderController),
-            SizedBox(height: 24),
-            
-            _buildTextField("Nationality", _nationalityController),
-            SizedBox(height: 24),
-            
-            _buildTextField("Phone Number", _phoneController),
-            SizedBox(height: 60),
-            
-            // Save Button
-            Container(
+            const SizedBox(height: 40),
+            _buildTextField(context, "Username", _usernameController),
+            const SizedBox(height: 24),
+            _buildTextField(context, "Email", _emailController),
+            const SizedBox(height: 24),
+            _buildTextField(context, "Gender", _genderController),
+            const SizedBox(height: 24),
+            _buildTextField(context, "Nationality", _nationalityController),
+            const SizedBox(height: 24),
+            _buildTextField(context, "Phone Number", _phoneController),
+            const SizedBox(height: 60),
+            SizedBox(
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  // Save the changes and return comprehensive data including image
                   Navigator.pop(context, {
                     'name': _usernameController.text,
                     'email': _emailController.text,
                     'gender': _genderController.text,
                     'nationality': _nationalityController.text,
                     'phone': _phoneController.text,
-                    'image': _selectedImageUrl, // Return the new image
+                    'image': _selectedImageUrl,
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -207,7 +191,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Text(
                   'Save',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colorScheme.onPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -220,35 +204,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildTextField(BuildContext context, String label, TextEditingController controller) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: TextStyle(
-            color: Colors.black,
+            color: colorScheme.onBackground,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: Color(0xFFF5F5F5),
+            color: colorScheme.surfaceVariant,
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
             controller: controller,
             style: TextStyle(
-              color: Colors.black87,
+              color: colorScheme.onSurface,
               fontSize: 15,
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               hintStyle: TextStyle(
-                color: Colors.grey[400],
+                color: colorScheme.onSurface.withOpacity(0.4),
                 fontSize: 15,
               ),
             ),

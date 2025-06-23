@@ -18,14 +18,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[900],
         elevation: 0,
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Colors.blue[600],
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -36,7 +36,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         title: Text(
           'Change Password',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -56,10 +56,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 height: 200,
                 margin: EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF0F8FF),
+                  color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Color(0xFF2196F3),
+                    color: Colors.blue[400]!,
                     width: 2,
                   ),
                 ),
@@ -72,7 +72,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: Color(0xFFE3F2FD),
+                          color: Colors.grey[700],
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -84,7 +84,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           width: 6,
                           height: 6,
                           decoration: BoxDecoration(
-                            color: Color(0xFF64B5F6),
+                            color: Colors.blue[300],
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -96,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: Color(0xFF42A5F5),
+                            color: Colors.blue[400],
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -110,7 +110,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(
-                              color: Color(0xFF1976D2),
+                              color: Colors.blue[600],
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -125,10 +125,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             width: 50,
                             height: 90,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.grey[600],
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: Colors.black,
+                                color: Colors.grey[400]!,
                                 width: 2,
                               ),
                             ),
@@ -139,11 +139,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.circle, size: 8, color: Colors.black),
+                                    Icon(Icons.circle, size: 8, color: Colors.white),
                                     SizedBox(width: 2),
-                                    Icon(Icons.circle, size: 8, color: Colors.black),
+                                    Icon(Icons.circle, size: 8, color: Colors.white),
                                     SizedBox(width: 2),
-                                    Icon(Icons.circle, size: 8, color: Colors.black),
+                                    Icon(Icons.circle, size: 8, color: Colors.white),
                                   ],
                                 ),
                                 SizedBox(height: 8),
@@ -152,7 +152,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   width: 20,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: Color(0xFF4CAF50),
+                                    color: Colors.green[600],
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -176,7 +176,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 'Create a new password. Ensure it different from the previous one for security.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: Colors.grey[400],
                   height: 1.4,
                 ),
               ),
@@ -187,7 +187,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Text(
                 'Previous Password',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -216,7 +216,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Text(
                 'New Password',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -251,7 +251,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Text(
                 'Confirm Password',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -290,7 +290,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: Colors.blue[600],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -322,7 +322,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFF5F5F5),
+        color: Colors.grey[800],
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextFormField(
@@ -330,7 +330,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         obscureText: !isVisible,
         validator: validator,
         style: TextStyle(
-          color: Colors.black87,
+          color: Colors.white,
           fontSize: 15,
         ),
         decoration: InputDecoration(
@@ -338,13 +338,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           hintText: hintText,
           hintStyle: TextStyle(
-            color: Colors.grey[400],
+            color: Colors.grey[500],
             fontSize: 15,
           ),
           suffixIcon: IconButton(
             icon: Icon(
               isVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey[600],
+              color: Colors.grey[400],
             ),
             onPressed: onToggleVisibility,
           ),
@@ -359,6 +359,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.grey[900],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -366,10 +367,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             children: [
               Icon(Icons.check_circle, color: Colors.green),
               SizedBox(width: 8),
-              Text('Success'),
+              Text('Success', style: TextStyle(color: Colors.white)),
             ],
           ),
-          content: Text('Your password has been changed successfully!'),
+          content: Text(
+            'Your password has been changed successfully!',
+            style: TextStyle(color: Colors.white),
+          ),
           actions: [
             ElevatedButton(
               onPressed: () {
@@ -377,7 +381,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Navigator.of(context).pop(); // Go back to profile
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.blue[600],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

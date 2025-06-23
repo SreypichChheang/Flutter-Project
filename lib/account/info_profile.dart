@@ -7,6 +7,7 @@ class InformationScreen extends StatefulWidget {
 
 class _InformationScreenState extends State<InformationScreen> {
   final TextEditingController _searchController = TextEditingController();
+
   List<Map<String, String>> _allQuestions = [
     {
       'question': 'What is smart home automation, and how does it work?',
@@ -41,7 +42,7 @@ class _InformationScreenState extends State<InformationScreen> {
       'answer': 'Costs vary widely depending on the scope: Basic starter kit: \$200-500, Mid-range system: \$1,000-3,000, Comprehensive system: \$5,000-15,000+. Consider starting with essential devices and expanding gradually to spread costs over time.'
     }
   ];
-  
+
   List<Map<String, String>> _filteredQuestions = [];
 
   @override
@@ -56,8 +57,8 @@ class _InformationScreenState extends State<InformationScreen> {
         _filteredQuestions = _allQuestions;
       } else {
         _filteredQuestions = _allQuestions.where((item) =>
-          item['question']!.toLowerCase().contains(query.toLowerCase()) ||
-          item['answer']!.toLowerCase().contains(query.toLowerCase())
+            item['question']!.toLowerCase().contains(query.toLowerCase()) ||
+            item['answer']!.toLowerCase().contains(query.toLowerCase())
         ).toList();
       }
     });
@@ -65,26 +66,34 @@ class _InformationScreenState extends State<InformationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDark ? Colors.black : Colors.white;
+    final cardColor = isDark ? Colors.grey[900]! : Colors.grey[50]!;
+    final borderColor = isDark ? Colors.grey[800]! : Colors.grey[200]!;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final subtitleColor = isDark ? Colors.grey[300]! : Colors.grey[700]!;
+    final hintTextColor = isDark ? Colors.grey[500]! : Colors.grey[400]!;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         elevation: 0,
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: isDark ? Colors.black : Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         title: Text(
           'Information',
           style: TextStyle(
-            color: Colors.black,
+            color: textColor,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -94,14 +103,12 @@ class _InformationScreenState extends State<InformationScreen> {
           Container(
             margin: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: isDark ? Colors.white : Colors.black,
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              icon: Icon(Icons.help_outline, color: Colors.white),
-              onPressed: () {
-                _showHelpDialog();
-              },
+              icon: Icon(Icons.help_outline, color: isDark ? Colors.black : Colors.white),
+              onPressed: _showHelpDialog,
             ),
           ),
         ],
@@ -111,21 +118,17 @@ class _InformationScreenState extends State<InformationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Bar
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFFF5F5F5),
+                color: isDark ? Colors.grey[850] : Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 1,
-                ),
+                border: Border.all(color: borderColor),
               ),
               child: TextField(
                 controller: _searchController,
                 onChanged: _filterQuestions,
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: textColor,
                   fontSize: 15,
                 ),
                 decoration: InputDecoration(
@@ -133,45 +136,37 @@ class _InformationScreenState extends State<InformationScreen> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   hintText: 'Ask Question',
                   hintStyle: TextStyle(
-                    color: Colors.grey[400],
+                    color: hintTextColor,
                     fontSize: 15,
                   ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey[400],
-                    size: 20,
-                  ),
-                  suffixIcon: Icon(
-                    Icons.mic,
-                    color: Colors.grey[400],
-                    size: 20,
-                  ),
+                  prefixIcon: Icon(Icons.search, color: hintTextColor, size: 20),
+                  suffixIcon: Icon(Icons.mic, color: hintTextColor, size: 20),
                 ),
               ),
             ),
-            
             SizedBox(height: 24),
-            
-            // Top Questions Header
             Text(
               'Top Question',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: textColor,
               ),
             ),
-            
             SizedBox(height: 16),
-            
-            // Questions List
             Expanded(
               child: _filteredQuestions.isEmpty
-                  ? _buildNoResultsWidget()
+                  ? _buildNoResultsWidget(isDark)
                   : ListView.builder(
                       itemCount: _filteredQuestions.length,
                       itemBuilder: (context, index) {
-                        return _buildQuestionItem(_filteredQuestions[index]);
+                        return _buildQuestionItem(
+                          _filteredQuestions[index],
+                          isDark,
+                          cardColor,
+                          borderColor,
+                          textColor,
+                        );
                       },
                     ),
             ),
@@ -181,23 +176,18 @@ class _InformationScreenState extends State<InformationScreen> {
     );
   }
 
-  Widget _buildQuestionItem(Map<String, String> item) {
+  Widget _buildQuestionItem(Map<String, String> item, bool isDark, Color cardColor, Color borderColor, Color textColor) {
     return Container(
       margin: EdgeInsets.only(bottom: 12),
       child: InkWell(
-        onTap: () {
-          _showAnswerDialog(item['question']!, item['answer']!);
-        },
+        onTap: () => _showAnswerDialog(item['question']!, item['answer']!),
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.grey[50],
+            color: cardColor,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Colors.grey[200]!,
-              width: 1,
-            ),
+            border: Border.all(color: borderColor),
           ),
           child: Row(
             children: [
@@ -206,17 +196,13 @@ class _InformationScreenState extends State<InformationScreen> {
                   item['question']!,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.black87,
+                    color: textColor,
                     height: 1.4,
                   ),
                 ),
               ),
               SizedBox(width: 8),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey[400],
-                size: 16,
-              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
             ],
           ),
         ),
@@ -224,22 +210,18 @@ class _InformationScreenState extends State<InformationScreen> {
     );
   }
 
-  Widget _buildNoResultsWidget() {
+  Widget _buildNoResultsWidget(bool isDark) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search_off,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.search_off, size: 64, color: Colors.grey),
           SizedBox(height: 16),
           Text(
             'No questions found',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: isDark ? Colors.grey[300] : Colors.grey[600],
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -248,7 +230,7 @@ class _InformationScreenState extends State<InformationScreen> {
             'Try searching with different keywords',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[500],
+              color: isDark ? Colors.grey[400] : Colors.grey[500],
             ),
           ),
         ],
@@ -260,62 +242,33 @@ class _InformationScreenState extends State<InformationScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            'Answer',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text('Answer', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  question,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
-                ),
+                Text(question, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 SizedBox(height: 12),
-                Text(
-                  answer,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                    height: 1.5,
-                  ),
-                ),
+                Text(answer, style: TextStyle(fontSize: 14, height: 1.5)),
               ],
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Close',
-                style: TextStyle(color: Colors.grey[600]),
-              ),
+              child: Text('Close', style: TextStyle(color: isDark ? Colors.white70 : Colors.grey[600])),
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                backgroundColor: isDark ? Colors.white : Colors.black,
+                foregroundColor: isDark ? Colors.black : Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: Text(
-                'Got it',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text('Got it'),
             ),
           ],
         );
@@ -327,10 +280,9 @@ class _InformationScreenState extends State<InformationScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Row(
             children: [
               Icon(Icons.help_outline, color: Colors.blue),
@@ -345,12 +297,11 @@ class _InformationScreenState extends State<InformationScreen> {
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                backgroundColor: isDark ? Colors.white : Colors.black,
+                foregroundColor: isDark ? Colors.black : Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: Text('OK', style: TextStyle(color: Colors.white)),
+              child: Text('OK'),
             ),
           ],
         );
