@@ -80,6 +80,7 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
             ),
+            
             SectionTile(
               icon: Icons.language,
               title: loc.language,
