@@ -74,6 +74,7 @@ class LogoSection extends StatelessWidget {
     );
   }
 }
+
 class WelcomeTextSection extends StatelessWidget {
   const WelcomeTextSection({super.key});
 
