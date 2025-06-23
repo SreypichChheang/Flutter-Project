@@ -1,43 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+
 import 'package:app/setting/settings_screen.dart';
 import 'edit_profile.dart';
 import 'changePsw_profile.dart';
 import 'info_profile.dart';
 import 'update_profile.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 
 class UserProfileScreen extends StatefulWidget {
-  final String? userName;
-  final String? userEmail;
-  final String? userImage;
-  final int? followerCount;
-
-  const UserProfileScreen({
-    Key? key,
-    this.userName,
-    this.userEmail,
-    this.userImage,
-    this.followerCount,
-  }) : super(key: key);
+  const UserProfileScreen({Key? key}) : super(key: key);
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  late String displayName;
-  late String displayEmail;
-  late String displayImage;
-  late int displayFollowers;
+  String displayName = 'Loading...';
+  String displayEmail = '';
+  String displayImage = '';
+  int displayFollowers = 0;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    displayName = widget.userName ?? "Anna Jennifer";
-    displayEmail = widget.userEmail ?? "annajennifer@gmail.com";
-    displayImage = widget.userImage ?? 'https://picsum.photos/200/200?random=1';
-    displayFollowers = widget.followerCount ?? 1000;
+    _fetchUserData();
+  }
+
+  void _fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final data = doc.data();
+      if (data != null) {
+        setState(() {
+          displayName = data['name'] ?? user.displayName ?? 'No Name';
+          displayEmail = data['email'] ?? user.email ?? 'No Email';
+          displayImage = data['profileImage'] ?? '';
+          displayFollowers = data['followers'] ?? 0;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          displayName = user.displayName ?? 'No Name';
+          displayEmail = user.email ?? 'No Email';
+          displayImage = '';
+          displayFollowers = 0;
+          isLoading = false;
+        });
+      }
+    }
   }
 
   ImageProvider _getImageProvider() {
@@ -48,14 +65,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           final bytes = base64Decode(base64Data);
           return MemoryImage(bytes);
         } catch (e) {
-          print('Error loading base64 image: $e');
-          return NetworkImage('https://picsum.photos/200/200?random=1');
+          print('Error decoding base64 image: $e');
         }
       } else {
         return NetworkImage(displayImage);
       }
     }
-    return NetworkImage('https://picsum.photos/200/200?random=1');
+    return const NetworkImage('https://picsum.photos/200/200?random=1');
   }
 
   @override
@@ -63,17 +79,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final textColor = theme.colorScheme.onSurface;
-    final cardColor = theme.cardColor;
     final primaryColor = theme.colorScheme.primary;
-    final scaffoldBackground = theme.scaffoldBackgroundColor;
-    bool isProfileSelected = true;
+
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
-      backgroundColor: scaffoldBackground,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            // Top Navigation
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -84,9 +102,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 8,
-                          ),
+                              horizontal: 24, vertical: 8),
                           decoration: BoxDecoration(
                             color: primaryColor,
                             borderRadius: BorderRadius.circular(20),
@@ -108,22 +124,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               MaterialPageRoute(
                                 builder: (context) => SettingsScreen(
                                   isDarkMode: isDarkMode,
-                                  onToggleDarkMode: (bool value) {
-                                    // Implement theme change logic
-                                  },
+                                  onToggleDarkMode: (bool value) {},
                                 ),
                               ),
                             );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 8,
-                            ),
+                                horizontal: 24, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isDarkMode 
-                                  ? Colors.grey[800] 
-                                  : Colors.grey[100],
+                              color:
+                                  isDarkMode ? Colors.grey[800] : Colors.grey[100],
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -158,10 +169,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       image: _getImageProvider(),
                       fit: BoxFit.cover,
                     ),
-                    border: Border.all(
-                      color: primaryColor,
-                      width: 2,
-                    ),
+                    border: Border.all(color: primaryColor, width: 2),
                   ),
                 ),
                 Positioned(
@@ -174,11 +182,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       color: primaryColor,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      Icons.edit, 
-                      color: theme.colorScheme.onPrimary, 
-                      size: 16
-                    ),
+                    child: Icon(Icons.edit,
+                        color: theme.colorScheme.onPrimary, size: 16),
                   ),
                 ),
               ],
@@ -200,7 +205,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             // Followers Count
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
                 color: primaryColor,
                 borderRadius: BorderRadius.circular(20),
@@ -238,15 +244,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                           ),
                         );
-                        if (result != null) {
-                          setState(() {
-                            displayName = result['name'] ?? displayName;
-                            displayEmail = result['email'] ?? displayEmail;
-                            if (result['image'] != null) {
-                              displayImage = result['image'];
-                            }
-                          });
-                        }
+                        if (result != null) _fetchUserData();
                       },
                     ),
                     const SizedBox(height: 16),
@@ -258,8 +256,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ChangePasswordScreen(),
-                          ),
+                              builder: (context) => ChangePasswordScreen()),
                         );
                       },
                     ),
@@ -272,8 +269,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => InformationScreen(),
-                          ),
+                              builder: (context) => InformationScreen()),
                         );
                       },
                     ),
@@ -286,12 +282,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UpdateScreen(),
-                          ),
+                              builder: (context) => UpdateScreen()),
                         );
                       },
                     ),
-
                     const Spacer(),
 
                     // Log out button
@@ -313,7 +307,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.logout, color: theme.colorScheme.onPrimary),
+                            Icon(Icons.logout,
+                                color: theme.colorScheme.onPrimary),
                             const SizedBox(width: 8),
                             Text(
                               'Log out',
@@ -344,7 +339,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required VoidCallback onTap,
   }) {
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -370,11 +365,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 color: theme.colorScheme.primary,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon, 
-                color: theme.colorScheme.onPrimary, 
-                size: 20
-              ),
+              child: Icon(icon,
+                  color: theme.colorScheme.onPrimary, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -387,11 +379,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios, 
-              color: theme.colorScheme.onSurface.withOpacity(0.6), 
-              size: 16
-            ),
+            Icon(Icons.arrow_forward_ios,
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                size: 16),
           ],
         ),
       ),
@@ -412,26 +402,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
           ),
           child: AlertDialog(
-            title: Text(
-              'Log Out',
-              style: TextStyle(color: theme.colorScheme.onSurface),
-            ),
-            content: Text(
-              'Are you sure you want to log out?',
-              style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
-            ),
+            title: Text('Log Out',
+                style: TextStyle(color: theme.colorScheme.onSurface)),
+            content: Text('Are you sure you want to log out?',
+                style: TextStyle(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7))),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: theme.colorScheme.primary),
-                ),
+                child: Text('Cancel',
+                    style: TextStyle(color: theme.colorScheme.primary)),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
                   Navigator.of(context).pop();
-                  // Handle logout logic
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
@@ -439,10 +424,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
-                  'Log Out', 
-                  style: TextStyle(color: theme.colorScheme.onPrimary),
-                ),
+                child: Text('Log Out',
+                    style: TextStyle(color: theme.colorScheme.onPrimary)),
               ),
             ],
           ),
