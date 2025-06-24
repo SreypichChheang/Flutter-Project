@@ -96,6 +96,12 @@ BEGIN
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "app.exe" "\0"
             VALUE "ProductName", "app" "\0"
+            VALUE "FileDescription", "settingv2" "\0"
+            VALUE "FileVersion", VERSION_AS_STRING "\0"
+            VALUE "InternalName", "settingv2" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "settingv2.exe" "\0"
+            VALUE "ProductName", "settingv2" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -10,33 +10,35 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _previousPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  
+
   bool _isPreviousPasswordVisible = false;
   bool _isNewPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: isDark ? Colors.black : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
         elevation: 0,
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue[600],
+            color: isDark ? Colors.white : Colors.black,
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: isDark ? Colors.black : Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         title: Text(
           'Change Password',
           style: TextStyle(
-            color: Colors.white,
+            color: isDark ? Colors.white : Colors.black,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -50,13 +52,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Illustration Container
               Container(
                 width: double.infinity,
                 height: 200,
                 margin: EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
-                  color: Colors.grey[800],
+                  color: isDark ? Colors.grey[800] : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: Colors.blue[400]!,
@@ -67,16 +68,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Background circle
                       Container(
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: Colors.grey[700],
+                          color: isDark ? Colors.grey[700] : Colors.grey[400],
                           shape: BoxShape.circle,
                         ),
                       ),
-                      // Small dots
                       Positioned(
                         top: 40,
                         left: 80,
@@ -101,11 +100,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                         ),
                       ),
-                      // Lock and phone illustration
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Lock icon
                           Container(
                             width: 60,
                             height: 60,
@@ -113,19 +110,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               color: Colors.blue[600],
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              Icons.lock,
-                              color: Colors.white,
-                              size: 30,
-                            ),
+                            child: Icon(Icons.lock, color: Colors.white, size: 30),
                           ),
                           SizedBox(width: 20),
-                          // Phone with password
                           Container(
                             width: 50,
                             height: 90,
                             decoration: BoxDecoration(
-                              color: Colors.grey[600],
+                              color: isDark ? Colors.grey[600] : Colors.grey[400],
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: Colors.grey[400]!,
@@ -135,7 +127,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Password dots
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -147,7 +138,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 8),
-                                // Checkmark
                                 Container(
                                   width: 20,
                                   height: 20,
@@ -155,11 +145,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     color: Colors.green[600],
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 14,
-                                  ),
+                                  child: Icon(Icons.check, color: Colors.white, size: 14),
                                 ),
                               ],
                             ),
@@ -170,117 +156,60 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                 ),
               ),
-              
-              // Description Text
               Text(
                 'Create a new password. Ensure it different from the previous one for security.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[400],
+                  color: isDark ? Colors.grey[400] : Colors.black54,
                   height: 1.4,
                 ),
               ),
-              
               SizedBox(height: 32),
-              
-              // Previous Password Field
-              Text(
-                'Previous Password',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 8),
+              _buildPasswordLabel('Previous Password', isDark),
               _buildPasswordField(
                 controller: _previousPasswordController,
-                hintText: 'Enter Your password',
+                hintText: 'Enter your password',
                 isVisible: _isPreviousPasswordVisible,
                 onToggleVisibility: () {
-                  setState(() {
-                    _isPreviousPasswordVisible = !_isPreviousPasswordVisible;
-                  });
+                  setState(() => _isPreviousPasswordVisible = !_isPreviousPasswordVisible);
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Previous password is required';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Previous password is required' : null,
+                isDark: isDark,
               ),
-              
               SizedBox(height: 24),
-              
-              // New Password Field
-              Text(
-                'New Password',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 8),
+              _buildPasswordLabel('New Password', isDark),
               _buildPasswordField(
                 controller: _newPasswordController,
                 hintText: 'Enter your new password',
                 isVisible: _isNewPasswordVisible,
                 onToggleVisibility: () {
-                  setState(() {
-                    _isNewPasswordVisible = !_isNewPasswordVisible;
-                  });
+                  setState(() => _isNewPasswordVisible = !_isNewPasswordVisible);
                 },
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'New password is required';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
+                  if (value == null || value.isEmpty) return 'New password is required';
+                  if (value.length < 6) return 'Password must be at least 6 characters';
                   if (value == _previousPasswordController.text) {
                     return 'New password must be different from previous password';
                   }
                   return null;
                 },
+                isDark: isDark,
               ),
-              
               SizedBox(height: 24),
-              
-              // Confirm Password Field
-              Text(
-                'Confirm Password',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 8),
+              _buildPasswordLabel('Confirm Password', isDark),
               _buildPasswordField(
                 controller: _confirmPasswordController,
                 hintText: 'Re-enter the password',
                 isVisible: _isConfirmPasswordVisible,
                 onToggleVisibility: () {
-                  setState(() {
-                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                  });
+                  setState(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible);
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
-                  }
-                  if (value != _newPasswordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
+                validator: (value) => value != _newPasswordController.text ? 'Passwords do not match' : null,
+                isDark: isDark,
               ),
-              
               SizedBox(height: 48),
-              
-              // Save Button
-              Container(
+              SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
@@ -290,7 +219,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[600],
+                    backgroundColor: isDark ? Colors.white : Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -299,7 +228,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Text(
                     'Save',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: isDark ? Colors.black : Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -313,16 +242,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
+  Widget _buildPasswordLabel(String label, bool isDark) => Text(
+        label,
+        style: TextStyle(
+          color: isDark ? Colors.white : Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+
   Widget _buildPasswordField({
     required TextEditingController controller,
     required String hintText,
     required bool isVisible,
     required VoidCallback onToggleVisibility,
     required String? Function(String?) validator,
+    required bool isDark,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[800],
+        color: isDark ? Colors.grey[800] : Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextFormField(
@@ -330,7 +269,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         obscureText: !isVisible,
         validator: validator,
         style: TextStyle(
-          color: Colors.white,
+          color: isDark ? Colors.white : Colors.black,
           fontSize: 15,
         ),
         decoration: InputDecoration(
@@ -338,13 +277,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           hintText: hintText,
           hintStyle: TextStyle(
-            color: Colors.grey[500],
+            color: isDark ? Colors.grey[500] : Colors.grey[600],
             fontSize: 15,
           ),
           suffixIcon: IconButton(
             icon: Icon(
               isVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey[400],
+              color: Colors.grey,
             ),
             onPressed: onToggleVisibility,
           ),
@@ -354,43 +293,37 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   void _handlePasswordChange() {
-    // Show success dialog
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.grey[900],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Success', style: TextStyle(color: Colors.white)),
-            ],
-          ),
-          content: Text(
-            'Your password has been changed successfully!',
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Go back to profile
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[600],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text('OK', style: TextStyle(color: Colors.white)),
-            ),
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green),
+            SizedBox(width: 8),
+            Text('Success', style: TextStyle(color: isDark ? Colors.white : Colors.black)),
           ],
-        );
-      },
+        ),
+        content: Text(
+          'Your password has been changed successfully!',
+          style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[600],
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text('OK', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 
