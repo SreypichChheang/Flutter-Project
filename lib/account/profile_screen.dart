@@ -110,7 +110,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           child: Text(
                             'User Profile',
                             style: TextStyle(
-                              color: onPrimaryColor,
+                              color: Colors.black12,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -212,7 +212,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Text(
                 '$displayFollowers Followers',
                 style: TextStyle(
-                  color: onPrimaryColor,
+                  color: Colors.black38,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -310,7 +310,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             Text(
                               'Log out',
                               style: TextStyle(
-                                color: onPrimaryColor,
+                                color: Colors.black12,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -336,6 +336,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required VoidCallback onTap,
   }) {
     final isDarkMode = theme.brightness == Brightness.dark;
+    final Color cardColor = isDarkMode ? Colors.grey[900]! : Colors.grey[200]!;
+    final Color iconBgColor = isDarkMode ? theme.colorScheme.primary : Colors.black;
+    final Color textColor = theme.colorScheme.onSurface;
 
     return GestureDetector(
       onTap: onTap,
