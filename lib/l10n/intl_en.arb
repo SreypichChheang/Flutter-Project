@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "settings": "Settings",
+  "darkMode": "Dark Mode",
+  "notifications": "Notifications",
+  "privacy": "Privacy",
+  "language": "Language",
+  "favorite": "Favorite",
+  "about": "About",
+  "logout": "Logout"
+}

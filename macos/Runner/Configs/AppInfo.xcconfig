@@ -9,6 +9,10 @@ PRODUCT_NAME = app
 
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = com.example.app
+PRODUCT_NAME = settingv2
+
+// The application's bundle identifier
+PRODUCT_BUNDLE_IDENTIFIER = com.example.settingv2
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
