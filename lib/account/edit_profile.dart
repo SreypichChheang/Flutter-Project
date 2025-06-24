@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:html' as html;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:io';
 
 class EditProfileScreen extends StatefulWidget {
   final String? initialName;
@@ -27,6 +28,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _phoneController = TextEditingController(text: "+44 1653 3343556");
 
   String? _selectedImageUrl;
+  File? _selectedImageFile;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -37,6 +40,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   ImageProvider _getImageProvider() {
+    // If we have a selected file, use it
+    if (_selectedImageFile != null) {
+      return FileImage(_selectedImageFile!);
+    }
+    
+    // If we have a URL (including base64), use it
     if (_selectedImageUrl != null && _selectedImageUrl!.isNotEmpty) {
       if (_selectedImageUrl!.startsWith('data:')) {
         try {
@@ -53,26 +62,88 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return const NetworkImage('https://picsum.photos/200/200?random=1');
   }
 
-  void _pickImage() async {
-    final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.accept = 'image/*';
-    uploadInput.click();
+  void _showImageSourceDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImageFromGallery();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImageFromCamera();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
-    uploadInput.onChange.listen((event) {
-      final files = uploadInput.files;
-      if (files!.isNotEmpty) {
-        final file = files[0];
-        final reader = html.FileReader();
-
-        reader.onLoadEnd.listen((event) {
-          setState(() {
-            _selectedImageUrl = reader.result as String;
-          });
+  Future<void> _pickImageFromGallery() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 80,
+      );
+      
+      if (image != null) {
+        final File imageFile = File(image.path);
+        final Uint8List imageBytes = await imageFile.readAsBytes();
+        final String base64String = base64Encode(imageBytes);
+        
+        setState(() {
+          _selectedImageFile = imageFile;
+          _selectedImageUrl = 'data:image/jpeg;base64,$base64String';
         });
-
-        reader.readAsDataUrl(file);
       }
-    });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image: $e')),
+      );
+    }
+  }
+
+  Future<void> _pickImageFromCamera() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 80,
+      );
+      
+      if (image != null) {
+        final File imageFile = File(image.path);
+        final Uint8List imageBytes = await imageFile.readAsBytes();
+        final String base64String = base64Encode(imageBytes);
+        
+        setState(() {
+          _selectedImageFile = imageFile;
+          _selectedImageUrl = 'data:image/jpeg;base64,$base64String';
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error taking photo: $e')),
+      );
+    }
   }
 
   @override
@@ -130,7 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     bottom: 0,
                     right: 0,
                     child: GestureDetector(
-                      onTap: _pickImage,
+                      onTap: _showImageSourceDialog,
                       child: Container(
                         width: 36,
                         height: 36,
@@ -179,6 +250,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     'nationality': _nationalityController.text,
                     'phone': _phoneController.text,
                     'image': _selectedImageUrl,
+                    'imageFile': _selectedImageFile,
                   });
                 },
                 style: ElevatedButton.styleFrom(

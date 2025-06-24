@@ -1,8 +1,8 @@
-
+import 'package:app/authentication/forget_password.dart';
 import 'package:app/dashboard/home_page.dart';
+import 'package:app/authentication/auth_service.dart'; // ✅ Add this import
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'forget_password.dart';
 
 Future<void> _launchUrlSafe(String url) async {
   final Uri uri = Uri.parse(url);
@@ -18,14 +18,19 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
-  final _emailFocusNode = FocusNode();
-  final _passwordFocusNode = FocusNode();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -57,7 +62,31 @@ class _LoginPageState extends State<LoginPage>
     _controller.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _login() async {
+    setState(() => _isLoading = true);
+    try {
+      final user = await _authService.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const Controller()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -68,12 +97,7 @@ class _LoginPageState extends State<LoginPage>
           gradient: LinearGradient(
             begin: Alignment(-0.8, -1),
             end: Alignment(0.8, 1),
-            colors: [
-              Color(0xFFE5E5E5),
-              Color(0xFFB0B0B0),
-              Color(0xFF3A3A3A),
-              Colors.black,
-            ],
+            colors: [Color(0xFFE5E5E5), Color(0xFFB0B0B0), Color(0xFF3A3A3A), Colors.black],
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
@@ -87,10 +111,7 @@ class _LoginPageState extends State<LoginPage>
                   Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                      ),
+                      icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -98,67 +119,49 @@ class _LoginPageState extends State<LoginPage>
                   SizedBox(
                     width: 80,
                     height: 80,
-                    child: Image.asset(
-                      'assets/images/light-bulb.png',
-                      fit: BoxFit.contain,
-                    ),
+                    child: Image.asset('assets/images/light-bulb.png'),
                   ),
                   const SizedBox(height: 20),
                   const Text(
                     'SMART EY SMART\nYANG NIS',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 22,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
 
-                  // Email
-                  _buildTextField('Email', _emailFocusNode, false),
+                  _buildTextField('Email', _emailController, _emailFocusNode, false),
                   const SizedBox(height: 15),
-
-                  // Password
-                  _buildTextField('Password', _passwordFocusNode, true),
+                  _buildTextField('Password', _passwordController, _passwordFocusNode, true),
                   const SizedBox(height: 25),
 
                   SizedBox(
                     width: double.infinity,
                     height: 45,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Navigate to DashboardScreen
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Controller()),
-                        );
-                      },
+                      onPressed: _isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         elevation: 4,
                       ),
-                      child: const Text('LogIn'),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Log In'),
                     ),
                   ),
                   const SizedBox(height: 15),
 
-                  // Forget Password
                   Align(
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ForgetPasswordPage(),
-                          ),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ForgetPasswordPage()));
                       },
                       child: const Text(
                         'Forget Password?',
@@ -178,10 +181,7 @@ class _LoginPageState extends State<LoginPage>
                       Expanded(child: Divider(color: Colors.black26)),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          'or Continue with:',
-                          style: TextStyle(color: Colors.black54),
-                        ),
+                        child: Text('or Continue with:', style: TextStyle(color: Colors.black54)),
                       ),
                       Expanded(child: Divider(color: Colors.black26)),
                     ],
@@ -193,23 +193,15 @@ class _LoginPageState extends State<LoginPage>
                     children: [
                       _SocialIconButton(
                         asset: 'assets/images/google.png',
-                        onTap:
-                            () => _launchUrlSafe(
-                              'https://accounts.google.com/signin',
-                            ),
+                        onTap: () => _launchUrlSafe('https://accounts.google.com/signin'),
                       ),
                       _SocialIconButton(
                         asset: 'assets/images/facebook.png',
-                        onTap:
-                            () => _launchUrlSafe(
-                              'https://www.facebook.com/login.php',
-                            ),
+                        onTap: () => _launchUrlSafe('https://www.facebook.com/login.php'),
                       ),
                       _SocialIconButton(
                         asset: 'assets/images/tiktok.png',
-                        onTap:
-                            () =>
-                                _launchUrlSafe('https://www.tiktok.com/login'),
+                        onTap: () => _launchUrlSafe('https://www.tiktok.com/login'),
                       ),
                     ],
                   ),
@@ -222,17 +214,14 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildTextField(String hint, FocusNode focusNode, bool obscure) {
+  Widget _buildTextField(String hint, TextEditingController controller, FocusNode focusNode, bool obscure) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color:
-              focusNode.hasFocus
-                  ? Colors.black
-                  : Colors.grey, // always show outline
+          color: focusNode.hasFocus ? Colors.black : Colors.grey,
           width: 1.5,
         ),
         boxShadow: [
@@ -243,17 +232,14 @@ class _LoginPageState extends State<LoginPage>
           ),
         ],
       ),
-
       child: TextField(
+        controller: controller,
         obscureText: obscure,
         focusNode: focusNode,
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );
@@ -285,9 +271,7 @@ class _SocialIconButtonState extends State<_SocialIconButton> {
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: _isHovered ? Colors.black : Colors.grey.shade400,
-            ),
+            border: Border.all(color: _isHovered ? Colors.black : Colors.grey.shade400),
           ),
           child: Image.asset(widget.asset, width: 32, height: 32),
         ),
