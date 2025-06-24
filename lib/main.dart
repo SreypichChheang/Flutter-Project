@@ -20,23 +20,27 @@ class SmartHomeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen width for scaling based on device size
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Set a scaling factor based on screen width
+    double scale = screenWidth < 350 ? 0.8 : 1.0; // Example for small devices
+
     return MaterialApp(
       title: 'Smart Home',
       debugShowCheckedModeBanner: false,
-      // Add global text scaling to reduce UI size
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            textScaleFactor: 0.6,   // More aggressive - 40% reduction
+            textScaleFactor: 1.0,   // Keep text scale to default for accessibility
             devicePixelRatio: 1.0,  // Force pixel ratio
           ),
           child: Transform.scale(
-            scale: 0.85,  // Scale the entire UI down by 15%
+            scale: scale,  // Apply dynamic scaling based on screen width
             child: child!,
           ),
         );
       },
-      // Add theme configuration for better UI consistency
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
@@ -65,7 +69,6 @@ class SmartHomeApp extends StatelessWidget {
           titleSmall: TextStyle(fontSize: 14),
         ),
       ),
-      // Use AuthWrapper to handle authentication state
       home: const AuthWrapper(),
     );
   }

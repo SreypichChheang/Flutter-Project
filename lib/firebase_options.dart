@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -43,7 +40,6 @@ class DefaultFirebaseOptions {
     }
   }
 
-  // CORRECT WEB CONFIGURATION FROM YOUR FIREBASE CONSOLE
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBKq9l4UE87JWCWbo02aFW6BBcGFwqufwo',
     appId: '1:96790747971:web:06ea87ed53a7eacacf6df6',
@@ -53,9 +49,11 @@ class DefaultFirebaseOptions {
     storageBucket: 'smart-ey-smart-yang-nis.firebasestorage.app',
   );
 
+  // CORRECT WEB CONFIGURATION FROM YOUR FIREBASE CONSOLE
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY_HERE',
-    appId: '1:96790747971:android:06ea87ed53a7eacac6df6',
+    apiKey: 'AIzaSyCMKbyKRZjXHJQc7-RMjbfBdMqcjpN9mQg',
+    appId: '1:96790747971:android:4228b137aa124d8ccf6df6',
     messagingSenderId: '96790747971',
     projectId: 'smart-ey-smart-yang-nis',
     storageBucket: 'smart-ey-smart-yang-nis.firebasestorage.app',
@@ -71,11 +69,22 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY_HERE',
-    appId: '1:96790747971:ios:06ea87ed53a7eacac6df6',
+    apiKey: 'AIzaSyDfvL1QoC1_4eUyErZ5Js-wa4u3QAyWRdI',
+    appId: '1:96790747971:ios:3843f1d098fd671ccf6df6',
     messagingSenderId: '96790747971',
     projectId: 'smart-ey-smart-yang-nis',
     storageBucket: 'smart-ey-smart-yang-nis.firebasestorage.app',
+    iosClientId: '96790747971-1i86rc140jmke34l57s0jgu26o4n4mrr.apps.googleusercontent.com',
     iosBundleId: 'com.example.app',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBKq9l4UE87JWCWbo02aFW6BBcGFwqufwo',
+    appId: '1:96790747971:web:07debb323d9cf6ffcf6df6',
+    messagingSenderId: '96790747971',
+    projectId: 'smart-ey-smart-yang-nis',
+    authDomain: 'smart-ey-smart-yang-nis.firebaseapp.com',
+    storageBucket: 'smart-ey-smart-yang-nis.firebasestorage.app',
+  );
+
 }

@@ -259,7 +259,7 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
 
   Widget _buildTabBar(ThemeData theme) {
     return SizedBox(
-      height: 50,
+      height: 60,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: tabs.length,
@@ -313,9 +313,9 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
         itemCount: currentDevices.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.95,
+          crossAxisSpacing: 6,
+          mainAxisSpacing: 10,
+          childAspectRatio: 0.78,
         ),
         itemBuilder: (context, index) {
           final device = currentDevices[index];
@@ -329,83 +329,96 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
 
   Widget _deviceCard(ThemeData theme, Device device, Function(bool) onSwitchChanged) {
     return Card(
-      elevation: 2,
+      elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),  // Added more padding for better spacing
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: theme.cardTheme.color,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primary.withOpacity(0.2),
-                    theme.colorScheme.primary.withOpacity(0.1),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(device.icon, color: Colors.black, size: 34),
-            ),
-            const Spacer(),
-            Text(
-              device.title,
-              style: TextStyle(
-                color: theme.colorScheme.onSurface,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              device.subtitle,
-              style: TextStyle(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
-                fontSize: 13,
-                letterSpacing: 0.2,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  device.isOn ? "ON" : "OFF",
-                  style: TextStyle(
-                    color: device.isOn ? Colors.green : Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+        ), // Wrap the Column in a SingleChildScrollView to make it scrollable
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Device Icon
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary.withOpacity(0.2),
+                      theme.colorScheme.primary.withOpacity(0.1),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  shape: BoxShape.circle,
                 ),
-                Transform.scale(
-                  scale: 0.8,
-                  child: Switch(
-                    value: device.isOn,
-                    onChanged: onSwitchChanged,
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.green,
-                    inactiveThumbColor: Colors.grey.shade700,
-                    inactiveTrackColor: Colors.grey.shade400,
+                child: Icon(device.icon, color: Colors.black, size: 34),
+              ),
+
+              const SizedBox(height: 10), // Space between the icon and text
+
+              // Device Title
+              Text(
+                device.title,
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                ),
+              ),
+
+
+              // Device Subtitle
+              Text(
+                device.subtitle,
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  fontSize: 13,
+                  letterSpacing: 0.2,
+                ),
+              ),
+
+              // ON/OFF Status and Switch
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // ON/OFF Text
+                  Text(
+                    device.isOn ? "ON" : "OFF",
+                    style: TextStyle(
+                      color: device.isOn ? Colors.green : Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+
+                  // Wrap the switch in an Expanded or Flexible widget to prevent overflow
+                  Expanded(
+                    child: Transform.scale(
+                      scale: 0.8, // Small scale for the switch
+                      child: Switch(
+                        value: device.isOn,
+                        onChanged: onSwitchChanged,
+                        activeColor: Colors.white,
+                        activeTrackColor: Colors.green,
+                        inactiveThumbColor: Colors.grey.shade700,
+                        inactiveTrackColor: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
         ),
       ),
     );
   }
+
 }
 
 class AddDeviceDialog extends StatefulWidget {
@@ -455,12 +468,13 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
           color: theme.colorScheme.onSurface,
         ),
       ),
-      content: SingleChildScrollView(
+      content: SingleChildScrollView(  // Ensure the content is scrollable
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Device Title Input
               TextFormField(
                 style: TextStyle(color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
@@ -483,6 +497,8 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 16),
+
+              // Subtitle Input
               TextFormField(
                 style: TextStyle(color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
@@ -504,6 +520,8 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                 onChanged: (value) => _subtitle = value,
               ),
               const SizedBox(height: 16),
+
+              // Room Dropdown
               DropdownButtonFormField<String>(
                 value: _room,
                 dropdownColor: theme.dialogBackgroundColor,
@@ -525,16 +543,13 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                   filled: true,
                 ),
                 items: [
-                  'Living Room',
-                  'Bathroom',
-                  'Kitchen',
-                  'Bedroom',
-                  'Office',
-                  'Outdoor'
+                  'Living Room', 'Bathroom', 'Kitchen', 'Bedroom', 'Office', 'Outdoor'
                 ].map((room) => DropdownMenuItem(value: room, child: Text(room))).toList(),
                 onChanged: (value) => setState(() => _room = value!),
               ),
               const SizedBox(height: 16),
+
+              // Switch for Device "Is On"
               SwitchListTile(
                 title: Text('Is On', style: TextStyle(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface)),
                 value: _isOn,
@@ -543,6 +558,8 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                 contentPadding: EdgeInsets.zero,
               ),
               const SizedBox(height: 16),
+
+              // Icon Selection
               Text('Select Icon', style: TextStyle(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface)),
               const SizedBox(height: 8),
               Wrap(
@@ -613,3 +630,4 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
     );
   }
 }
+

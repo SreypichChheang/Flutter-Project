@@ -138,7 +138,7 @@ class _DevicePageState extends State<DevicePage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 18),
         Row(
           children: [
             Expanded(
@@ -224,7 +224,7 @@ class _DevicePageState extends State<DevicePage> {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
+        childAspectRatio: 1.1,
       ),
       itemCount: _categories.length,
       itemBuilder: (context, index) {
