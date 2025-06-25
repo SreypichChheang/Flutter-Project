@@ -319,7 +319,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary, // Use primary color for dark background
+        color: Colors.grey[900], // Use primary color for dark background
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
@@ -363,7 +363,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           ),
           // Lightning bolt icon
           Image.asset(
-            'images/lightning_bolt.png', // Placeholder for lightning bolt image
+            'assets/images/lightning_bolt.png', // Placeholder for lightning bolt image
             height: 100,
             width: 100,
             errorBuilder: (context, error, stackTrace) {
@@ -413,9 +413,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             height: 4,
             width: 20, // Small underline for selected tab
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
+              color: Colors.black,
               borderRadius: BorderRadius.circular(2),
             ),
+
           ),
       ],
     );
@@ -427,7 +428,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     required VoidCallback onTap,
   }) {
     final bool isOn = device.isOn;
-    final Color cardColor = isOn ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface;
+    final Color cardColor = isOn ? Colors.black : Theme.of(context).colorScheme.surface;
     final Color textColor = isOn ? Colors.white : Colors.black87;
     final Color lightTextColor = isOn ? Colors.white70 : Colors.grey[600]!;
     final Color toggleColor = isOn ? Theme.of(context).colorScheme.secondary : Colors.grey;

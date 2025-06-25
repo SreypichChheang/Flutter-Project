@@ -47,6 +47,7 @@ dependencies:
   url_launcher: ^6.3.1
   mobile_scanner: ^7.0.1
   google_fonts: ^6.2.1
+  firebase_storage: ^12.4.7
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,7 @@ flutter:
      - assets/images/lightning_bolt.png
      - assets/images/cat.jpg
      - assets/images/about.png
+     - assets/images/default_user_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

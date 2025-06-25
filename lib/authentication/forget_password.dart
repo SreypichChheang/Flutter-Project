@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'otp_verification.dart';
+
 class ForgetPasswordPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
 
@@ -62,14 +64,17 @@ class ForgetPasswordPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // reset password logic
+                  // Navigate to OTP screen after email submission
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OtpScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,

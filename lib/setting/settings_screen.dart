@@ -1,15 +1,12 @@
-import 'package:app/dashboard/about_us_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:app/setting/notification.dart';
-import 'package:app/widget/profile_widget.dart';
-import 'package:app/widget/section_tile.dart';
 import 'package:app/setting/privacy_screen.dart';
 import 'package:app/setting/favorite.dart';
+import 'package:app/widget/profile_widget.dart';
+import 'package:app/dashboard/about_us_screen.dart';
+import 'package:app/account/profile_screen.dart';
 
-import 'package:flutter/material.dart';
-
-import 'privacy_screen.dart';
-
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   final bool isDarkMode;
   final Function(bool) onToggleDarkMode;
 
@@ -20,96 +17,137 @@ class SettingsScreen extends StatelessWidget {
   });
 
   @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  late bool _isDarkMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDarkMode = widget.isDarkMode; // Initialize the dark mode state
+  }
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode; // Toggle the dark mode state
+    });
+    widget.onToggleDarkMode(_isDarkMode); // Pass the new value back to the parent
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;
+
     return Scaffold(
-      backgroundColor: Colors.white, // Set background to white
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white, // White app bar
-        title: const Text(
-          "Settings",
-          style: TextStyle(color: Colors.black), // Black text
+        backgroundColor: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.black,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
         ),
-        leading: const BackButton(color: Colors.black), // Black back button
-        actions: const [SizedBox(width: 50)],
-        elevation: 0, // Remove shadow
+        actions: const [SizedBox(width: 20)],
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserProfileScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'User Profile',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                'Setting',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'User Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SettingsScreen(
-                          isDarkMode: isDarkMode,
-                          onToggleDarkMode: onToggleDarkMode,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: const Text(
-                      'Setting',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: const UserProfileWidget(),
             ),
-            const SizedBox(height: 20),
-            const UserProfileWidget(),
             _buildSectionTile(
               context,
-              icon: Icons.dark_mode,
+              icon: Icon(
+                _isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                color: theme.iconTheme.color,
+              ),
               title: "Dark Mode",
               trailing: Switch(
-                value: isDarkMode,
-                onChanged: onToggleDarkMode,
-                activeColor: Colors.black, // Black switch when active
+                value: _isDarkMode,
+                onChanged: (value) {
+                  _toggleTheme(); // Toggle the theme
+                },
+                activeColor: Colors.black,
               ),
+              onTap: () {
+
+              },
             ),
             _buildSectionTile(
               context,
-              icon: Icons.notifications,
+              icon: const Icon(Icons.notifications),
               title: "Notifications",
-               onTap: () {
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const NotificationScreen()),
@@ -118,7 +156,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             _buildSectionTile(
               context,
-              icon: Icons.lock,
+              icon: const Icon(Icons.lock),
               title: "Privacy",
               onTap: () {
                 Navigator.push(
@@ -129,7 +167,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             _buildSectionTile(
               context,
-              icon: Icons.language,
+              icon: const Icon(Icons.language),
               title: "Language",
               onTap: () {
                 Navigator.pushNamed(context, '/language');
@@ -137,7 +175,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             _buildSectionTile(
               context,
-              icon: Icons.bookmark,
+              icon: const Icon(Icons.bookmark),
               title: "Favorite",
               onTap: () {
                 Navigator.push(
@@ -148,7 +186,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             _buildSectionTile(
               context,
-              icon: Icons.info,
+              icon: const Icon(Icons.info),
               title: "About",
               onTap: () {
                 Navigator.push(
@@ -159,7 +197,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             _buildSectionTile(
               context,
-              icon: Icons.logout,
+              icon: const Icon(Icons.logout),
               title: "Logout",
             ),
           ],
@@ -169,12 +207,12 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildSectionTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    Widget? trailing,
-    VoidCallback? onTap,
-  }) {
+      BuildContext context, {
+        required Icon icon,
+        required String title,
+        Widget? trailing,
+        VoidCallback? onTap,
+      }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -190,7 +228,7 @@ class SettingsScreen extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        leading: Icon(icon, color: Colors.black),
+        leading: icon,
         title: Text(
           title,
           style: const TextStyle(color: Colors.black),

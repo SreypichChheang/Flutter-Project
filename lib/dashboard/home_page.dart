@@ -122,7 +122,7 @@ PreferredSizeWidget _customAppBar({
   final theme = Theme.of(context);
 
   return AppBar(
-    title: Text('Ronny Jin', style: theme.appBarTheme.titleTextStyle),
+    title: Text('Welcome', style: theme.appBarTheme.titleTextStyle),
     leading: Padding(
       padding: const EdgeInsets.only(left: 12),
       child: GestureDetector(
@@ -135,7 +135,12 @@ PreferredSizeWidget _customAppBar({
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           child: ClipOval(
-            child: Image.asset('assets/images/profile.png', width: 48, height: 48, fit: BoxFit.cover),
+            child: Image.network(
+              'https://picsum.photos/200/200?random=1',
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

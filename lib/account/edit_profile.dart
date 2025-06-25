@@ -59,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         return NetworkImage(_selectedImageUrl!);
       }
     }
-    return const NetworkImage('https://picsum.photos/200/200?random=1');
+    return const AssetImage('assets/images/default_user_icon.png');
   }
 
   void _showImageSourceDialog() {

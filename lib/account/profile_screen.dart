@@ -1,3 +1,4 @@
+import 'package:app/dashboard/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -79,7 +80,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final textColor = theme.colorScheme.onSurface;
-    final primaryColor = theme.colorScheme.primary;
+
 
     if (isLoading) {
       return const Scaffold(
@@ -89,74 +90,86 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.all(7.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.black,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () {
+                // Navigate back to the HomePage
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SmartHomeApp()), // Update this with the actual HomePage widget
+                );
+              },
+            ),
+          ),
+        ),
+        actions: const [SizedBox(width: 20)], // Reduced spacing
+        elevation: 0, // Remove shadow
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'User Profile',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsScreen(
+                      isDarkMode: isDarkMode,
+                      onToggleDarkMode: (bool value) {},
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Colors.grey[800] : Colors.grey[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Setting',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'User Profile',
-                            style: TextStyle(
-                              color: Colors.black12,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SettingsScreen(
-                                  isDarkMode: isDarkMode,
-                                  onToggleDarkMode: (bool value) {},
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 8),
-                            decoration: BoxDecoration(
-                              color:
-                                  isDarkMode ? Colors.grey[800] : Colors.grey[100],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'Setting',
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 40),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
             // Profile Image
             Stack(
               children: [
@@ -169,7 +182,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       image: _getImageProvider(),
                       fit: BoxFit.cover,
                     ),
-                    border: Border.all(color: primaryColor, width: 2),
+                    border: Border.all(color: Colors.black, width: 2),
                   ),
                 ),
                 Positioned(
@@ -179,7 +192,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: Colors.black,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(Icons.edit,
@@ -206,24 +219,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
-                color: primaryColor,
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 '$displayFollowers Followers',
                 style: TextStyle(
-                  color: Colors.black38,
+                  color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
 
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
                     _buildMenuItem(
@@ -244,7 +257,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         if (result != null) _fetchUserData();
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     _buildMenuItem(
                       theme: theme,
                       icon: Icons.lock_outline,
@@ -257,7 +270,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     _buildMenuItem(
                       theme: theme,
                       icon: Icons.info_outline,
@@ -270,7 +283,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     _buildMenuItem(
                       theme: theme,
                       icon: Icons.sync_outlined,
@@ -288,14 +301,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     // Logout Button
                     Container(
                       width: double.infinity,
-                      height: 56,
+                      height: 40,
                       margin: const EdgeInsets.only(bottom: 20),
                       child: ElevatedButton(
                         onPressed: () {
                           _showLogoutDialog(context, theme);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
+                          backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -306,11 +319,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           children: [
                             Icon(Icons.logout,
                                 color: theme.colorScheme.onPrimary),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 5),
                             Text(
                               'Log out',
                               style: TextStyle(
-                                color: Colors.black12,
+                                color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -360,7 +373,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           children: [
             Container(
               width: 40,
-              height: 40,
+              height: 35,
               decoration: BoxDecoration(
                 color: iconBgColor,
                 shape: BoxShape.circle,
